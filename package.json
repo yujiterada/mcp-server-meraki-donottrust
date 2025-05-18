@@ -1,0 +1,29 @@
+{
+  "name": "mcp-server-meraki-donottrust",
+  "version": "0.0.1",
+  "description": "MCP server for interacting with Meraki",
+  "type": "module",
+  "bin": {
+    "mcp-server-slack": "build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc --build && shx chmod +x build/*.js",
+    "prepare": "npm run build",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.0.1",
+    "@types/axios": "^0.9.36",
+    "axios": "^1.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "ejs": "^3.1.10",
+    "shx": "^0.3.4",
+    "swagger-typescript-api": "^13.1.3",
+    "typescript": "^5.6.2"
+  }
+}

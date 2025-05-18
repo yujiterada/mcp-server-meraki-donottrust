@@ -1,0 +1,32 @@
+import { Tool } from "@modelcontextprotocol/sdk/types.js";
+<%
+// Initialize array to store operation IDs
+let operationIds = [];
+for (let i = 0; i < data.length; i++) {
+  // Store each operationId in the array
+  operationIds.push(data[i].operationId);
+%>
+export const <%= data[i].operationId %>Tool: Tool = {
+  name: "<%= data[i].name %>",
+  scope: "<%= data[i].scope %>",
+  description: "<%- data[i].description.replace(/\n/g, '').replace(/"/g, '\\"') %>",
+  inputSchema: {
+    type: "object",
+    properties: {
+<% if (data[i].parameters && data[i].parameters.length > 0) { -%>
+<% data[i].parameters.forEach((param, index) => { -%>
+      "<%= param.name %>": {
+        type: "<%= param.type || 'string' %>",
+        description: "<%- param.description ? param.description.replace(/\n/g, '').replace(/"/g, '\\"') : '' %>"
+      }<%= index < data[i].parameters.length - 1 ? ',' : '' %>
+<% }); -%>
+<% } -%>
+    },
+    required: [<%- data[i].required %>],
+  },
+};
+<% } -%>
+
+export const <%- scope %>Tools = [
+<%- operationIds.map(id => `  ${id}Tool`).join(',\n') %>
+];

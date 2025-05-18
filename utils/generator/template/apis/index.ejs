@@ -1,0 +1,7 @@
+<% for(var i = 0; i < scopes.length; ++i) { -%>
+import {_<%=scopes[i]%>, <%=scopes[i]%>Endpoints} from "./<%=scopes[i]%>.js";
+<% } %>
+<% for(var i = 0; i < scopes.length; ++i) { -%>
+export const <%=scopes[i]%>API = _<%=scopes[i]%>;
+export const <%=scopes[i]%>APIEndpoints = <%=scopes[i]%>Endpoints;
+<% } %>
