@@ -17,7 +17,7 @@ Do not use if your organization prohibits you or you do not feel comfortable sen
 
 1. Clone this repository:
 ```bash
-git clone [repository-url]
+git clone git@github.com:yujiterada/mcp-server-meraki-donottrust.git
 cd mcp-server-meraki-donottrust
 ```
 
@@ -104,4 +104,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-[Add your license information here]
+MIT License
