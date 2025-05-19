@@ -144,7 +144,7 @@ async function main() {
   console.error("Connecting server to transport...");
   await server.connect(transport);
 
-  console.error("Slack MCP Server running on stdio");
+  console.error("Meraki MCP Server running on stdio");
 }
 
 main().catch((error) => {
