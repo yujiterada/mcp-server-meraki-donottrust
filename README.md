@@ -63,8 +63,9 @@ npm run build
 1. Open Claude Desktop App
 2. Go to Settings
 3. Navigate to the MCP section
-4. Click "Add MCP"
-5. Enter the following details:
+4. Click "Developer" on the left hand side
+5. Click "Edit Config"
+6. Create/Edit a file entering the following details:
    ```
    {
    "mcpServers": {
@@ -78,6 +79,7 @@ npm run build
       }
    }
    ```
+7. Restart app
 
 ## Future Development
 
