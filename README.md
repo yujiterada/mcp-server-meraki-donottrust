@@ -84,15 +84,15 @@ npm run build
    Windows
    ```
    {
-      "mcpServers": {
-          "meraki": {
+       "mcpServers": {
+           "meraki": {
                "command": "C:\\path\\to\\node.exe",
                "args": [
-                  "--env-file=C:\\path\\to\\mcp-server-meraki-donottrust\\.env",
-                  "C:\\path\\to\\mcp-server-meraki-donottrust\\build\\index.js"
+                   "--env-file=C:\\path\\to\\mcp-server-meraki-donottrust\\.env",
+                   "C:\\path\\to\\mcp-server-meraki-donottrust\\build\\index.js"
                ]
-          }
-      }
+           }
+       }
    }
    ```
 7. Restart app
