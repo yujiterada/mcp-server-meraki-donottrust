@@ -1,52 +1,9 @@
-function hasBodyPrefixedKeys(obj: any) {
-  // Check if obj is null or not an object
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-  // Get all keys of the object
-  const keys = Object.keys(obj);
-  // Check if any key starts with "body-"
-  return keys.some(key => key.startsWith('body-'));
-}
-
-function transformRequestBody(obj: any) {
-  const transformedObject: any = {};
-  // Loop through all keys in the original object
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "body-"
-    if (key.startsWith('body-')) {
-      // Create a new key without the "body-" prefix
-      const newKey = key.substring(5); // Remove first 5 characters ("body-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    } else {
-      // If the key doesn't start with "body-", keep it as is
-      transformedObject[key] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
-function transformQueryParams(obj: any) {
-  const transformedObject: any = {};
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "query-"
-    if (key.startsWith('query-')) {
-      // Create a new key without the "query-" prefix
-      const newKey = key.substring(6); // Remove first 6 characters ("query-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
 export async function _appliance(client: any, params: any): Promise<any> {
   let response = {data: ''};
   switch (params.name) {
     case "getDeviceApplianceDhcpSubnets": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/appliance/dhcp/subnets`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/appliance/dhcp/subnets`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -55,8 +12,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceAppliancePerformance": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/appliance/performance`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/appliance/performance`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -65,8 +22,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceAppliancePrefixesDelegated": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/appliance/prefixes/delegated`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/appliance/prefixes/delegated`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -75,8 +32,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceAppliancePrefixesDelegatedVlanAssignments": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/appliance/prefixes/delegated/vlanAssignments`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/appliance/prefixes/delegated/vlanAssignments`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -85,8 +42,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceApplianceRadioSettings": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/appliance/radio/settings`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/appliance/radio/settings`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -95,13 +52,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceApplianceRadioSettings": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/appliance/radio/settings`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/appliance/radio/settings`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/appliance/radio/settings`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -111,8 +66,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceApplianceUplinksSettings": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/appliance/uplinks/settings`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/appliance/uplinks/settings`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -121,13 +76,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceApplianceUplinksSettings": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/appliance/uplinks/settings`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/appliance/uplinks/settings`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/appliance/uplinks/settings`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -137,13 +90,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceApplianceVmxAuthenticationToken": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/appliance/vmx/authenticationToken`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/appliance/vmx/authenticationToken`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/appliance/vmx/authenticationToken`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -153,8 +104,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceClientSecurityEvents": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/clients/{clientId}/security/events`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/clients/{clientId}/security/events`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -163,8 +114,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceConnectivityMonitoringDestinations": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/connectivityMonitoringDestinations`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/connectivityMonitoringDestinations`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -173,13 +124,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceConnectivityMonitoringDestinations": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/connectivityMonitoringDestinations`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/connectivityMonitoringDestinations`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/connectivityMonitoringDestinations`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -189,8 +138,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceContentFiltering": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/contentFiltering`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/contentFiltering`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -199,13 +148,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceContentFiltering": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/contentFiltering`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/contentFiltering`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/contentFiltering`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -215,8 +162,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceContentFilteringCategories": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/contentFiltering/categories`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/contentFiltering/categories`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -225,8 +172,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceFirewallCellularFirewallRules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/cellularFirewallRules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/cellularFirewallRules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -235,13 +182,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceFirewallCellularFirewallRules": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/cellularFirewallRules`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/cellularFirewallRules`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/cellularFirewallRules`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -251,8 +196,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceFirewallFirewalledServices": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/firewalledServices`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/firewalledServices`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -261,8 +206,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceFirewallFirewalledService": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/firewalledServices/{service}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/firewalledServices/{service}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -271,13 +216,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceFirewallFirewalledService": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/firewalledServices/{service}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/firewalledServices/{service}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/firewalledServices/{service}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -287,8 +230,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceFirewallInboundCellularFirewallRules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/inboundCellularFirewallRules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/inboundCellularFirewallRules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -297,13 +240,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceFirewallInboundCellularFirewallRules": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/inboundCellularFirewallRules`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/inboundCellularFirewallRules`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/inboundCellularFirewallRules`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -313,8 +254,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceFirewallInboundFirewallRules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/inboundFirewallRules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/inboundFirewallRules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -323,13 +264,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceFirewallInboundFirewallRules": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/inboundFirewallRules`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/inboundFirewallRules`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/inboundFirewallRules`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -339,8 +278,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceFirewallL3FirewallRules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/l3FirewallRules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/l3FirewallRules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -349,13 +288,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceFirewallL3FirewallRules": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/l3FirewallRules`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/l3FirewallRules`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/l3FirewallRules`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -365,8 +302,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceFirewallL7FirewallRules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/l7FirewallRules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/l7FirewallRules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -375,13 +312,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceFirewallL7FirewallRules": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/l7FirewallRules`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/l7FirewallRules`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/l7FirewallRules`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -391,8 +326,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceFirewallL7FirewallRulesApplicationCategories": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/l7FirewallRules/applicationCategories`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/l7FirewallRules/applicationCategories`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -401,13 +336,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceFirewallMulticastForwarding": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/multicastForwarding`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/multicastForwarding`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/multicastForwarding`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -417,8 +350,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceFirewallOneToManyNatRules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/oneToManyNatRules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/oneToManyNatRules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -427,13 +360,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceFirewallOneToManyNatRules": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/oneToManyNatRules`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/oneToManyNatRules`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/oneToManyNatRules`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -443,8 +374,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceFirewallOneToOneNatRules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/oneToOneNatRules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/oneToOneNatRules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -453,13 +384,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceFirewallOneToOneNatRules": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/oneToOneNatRules`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/oneToOneNatRules`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/oneToOneNatRules`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -469,8 +398,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceFirewallPortForwardingRules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/portForwardingRules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/portForwardingRules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -479,13 +408,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceFirewallPortForwardingRules": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/portForwardingRules`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/portForwardingRules`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/portForwardingRules`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -495,8 +422,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceFirewallSettings": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/settings`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/settings`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -505,13 +432,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceFirewallSettings": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/settings`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/firewall/settings`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/firewall/settings`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -521,8 +446,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkAppliancePorts": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/ports`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/ports`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -531,8 +456,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkAppliancePort": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/ports/{portId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/ports/{portId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -541,13 +466,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkAppliancePort": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/ports/{portId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/ports/{portId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/ports/{portId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -557,8 +480,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkAppliancePrefixesDelegatedStatics": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/prefixes/delegated/statics`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/prefixes/delegated/statics`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -567,13 +490,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkAppliancePrefixesDelegatedStatic": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/prefixes/delegated/statics`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/prefixes/delegated/statics`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/prefixes/delegated/statics`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -583,8 +504,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkAppliancePrefixesDelegatedStatic": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/prefixes/delegated/statics/{staticDelegatedPrefixId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/prefixes/delegated/statics/{staticDelegatedPrefixId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -593,13 +514,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkAppliancePrefixesDelegatedStatic": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/prefixes/delegated/statics/{staticDelegatedPrefixId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/prefixes/delegated/statics/{staticDelegatedPrefixId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/prefixes/delegated/statics/{staticDelegatedPrefixId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -609,13 +528,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkAppliancePrefixesDelegatedStatic": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/prefixes/delegated/statics/{staticDelegatedPrefixId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/prefixes/delegated/statics/{staticDelegatedPrefixId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/prefixes/delegated/statics/{staticDelegatedPrefixId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -625,8 +542,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceRfProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/rfProfiles`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/rfProfiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -635,13 +552,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkApplianceRfProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/rfProfiles`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/rfProfiles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/rfProfiles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -651,13 +566,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceRfProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/rfProfiles/{rfProfileId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/rfProfiles/{rfProfileId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/rfProfiles/{rfProfileId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -667,13 +580,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkApplianceRfProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/rfProfiles/{rfProfileId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/rfProfiles/{rfProfileId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/rfProfiles/{rfProfileId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -683,8 +594,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceRfProfile": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/rfProfiles/{rfProfileId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/rfProfiles/{rfProfileId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -693,13 +604,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceSdwanInternetPolicies": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/sdwan/internetPolicies`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/sdwan/internetPolicies`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/sdwan/internetPolicies`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -709,8 +618,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceSecurityEvents": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/security/events`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/security/events`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -719,8 +628,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceSecurityIntrusion": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/security/intrusion`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/security/intrusion`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -729,13 +638,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceSecurityIntrusion": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/security/intrusion`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/security/intrusion`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/security/intrusion`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -745,8 +652,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceSecurityMalware": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/security/malware`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/security/malware`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -755,13 +662,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceSecurityMalware": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/security/malware`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/security/malware`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/security/malware`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -771,8 +676,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceSettings": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/settings`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/settings`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -781,13 +686,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceSettings": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/settings`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/settings`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/settings`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -797,8 +700,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceSingleLan": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/singleLan`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/singleLan`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -807,13 +710,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceSingleLan": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/singleLan`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/singleLan`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/singleLan`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -823,8 +724,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceSsids": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/ssids`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/ssids`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -833,8 +734,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceSsid": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/ssids/{number}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/ssids/{number}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -843,13 +744,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceSsid": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/ssids/{number}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/ssids/{number}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/ssids/{number}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -859,8 +758,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceStaticRoutes": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/staticRoutes`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/staticRoutes`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -869,13 +768,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkApplianceStaticRoute": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/staticRoutes`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/staticRoutes`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/staticRoutes`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -885,8 +782,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceStaticRoute": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/staticRoutes/{staticRouteId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/staticRoutes/{staticRouteId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -895,13 +792,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceStaticRoute": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/staticRoutes/{staticRouteId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/staticRoutes/{staticRouteId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/staticRoutes/{staticRouteId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -911,13 +806,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkApplianceStaticRoute": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/staticRoutes/{staticRouteId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/staticRoutes/{staticRouteId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/staticRoutes/{staticRouteId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -927,8 +820,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceTrafficShaping": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -937,13 +830,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceTrafficShaping": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -953,8 +844,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceTrafficShapingCustomPerformanceClasses": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/customPerformanceClasses`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping/customPerformanceClasses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -963,13 +854,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkApplianceTrafficShapingCustomPerformanceClass": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/customPerformanceClasses`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping/customPerformanceClasses`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/customPerformanceClasses`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -979,8 +868,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceTrafficShapingCustomPerformanceClass": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/customPerformanceClasses/{customPerformanceClassId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping/customPerformanceClasses/{customPerformanceClassId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -989,13 +878,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceTrafficShapingCustomPerformanceClass": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/customPerformanceClasses/{customPerformanceClassId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping/customPerformanceClasses/{customPerformanceClassId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/customPerformanceClasses/{customPerformanceClassId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1005,13 +892,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkApplianceTrafficShapingCustomPerformanceClass": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/customPerformanceClasses/{customPerformanceClassId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping/customPerformanceClasses/{customPerformanceClassId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/customPerformanceClasses/{customPerformanceClassId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1021,13 +906,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceTrafficShapingRules": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/rules`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping/rules`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/rules`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1037,8 +920,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceTrafficShapingRules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/rules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping/rules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1047,8 +930,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceTrafficShapingUplinkBandwidth": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/uplinkBandwidth`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping/uplinkBandwidth`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1057,13 +940,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceTrafficShapingUplinkBandwidth": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/uplinkBandwidth`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping/uplinkBandwidth`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/uplinkBandwidth`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1073,8 +954,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceTrafficShapingUplinkSelection": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/uplinkSelection`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping/uplinkSelection`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1083,13 +964,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceTrafficShapingUplinkSelection": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/uplinkSelection`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping/uplinkSelection`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/uplinkSelection`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1099,13 +978,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceTrafficShapingVpnExclusions": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/vpnExclusions`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/trafficShaping/vpnExclusions`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/trafficShaping/vpnExclusions`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1115,13 +992,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "connectNetworkApplianceUmbrellaAccount": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/umbrella/account/connect`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/umbrella/account/connect`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/umbrella/account/connect`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1131,13 +1006,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "disconnectNetworkApplianceUmbrellaAccount": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/umbrella/account/disconnect`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/umbrella/account/disconnect`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/umbrella/account/disconnect`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1147,13 +1020,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "disableNetworkApplianceUmbrellaProtection": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/umbrella/disableProtection`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/umbrella/disableProtection`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/umbrella/disableProtection`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1163,13 +1034,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "enableNetworkApplianceUmbrellaProtection": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/umbrella/enableProtection`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/umbrella/enableProtection`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/umbrella/enableProtection`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1179,13 +1048,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "excludeNetworkApplianceUmbrellaDomains": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/umbrella/excludeDomains`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/umbrella/excludeDomains`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/umbrella/excludeDomains`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1195,13 +1062,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "policiesNetworkApplianceUmbrella": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/umbrella/policies`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/umbrella/policies`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/umbrella/policies`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1211,8 +1076,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceUplinksUsageHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/uplinks/usageHistory`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/uplinks/usageHistory`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1221,8 +1086,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceVlans": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/vlans`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/vlans`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1231,13 +1096,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkApplianceVlan": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/vlans`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/vlans`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/vlans`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1247,8 +1110,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceVlansSettings": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/vlans/settings`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/vlans/settings`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1257,13 +1120,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceVlansSettings": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/vlans/settings`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/vlans/settings`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/vlans/settings`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1273,8 +1134,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceVlan": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/vlans/{vlanId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/vlans/{vlanId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1283,13 +1144,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceVlan": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/vlans/{vlanId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/vlans/{vlanId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/vlans/{vlanId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1299,13 +1158,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkApplianceVlan": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/vlans/{vlanId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/vlans/{vlanId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/appliance/vlans/{vlanId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1315,8 +1172,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceVpnBgp": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/vpn/bgp`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/vpn/bgp`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1325,13 +1182,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceVpnBgp": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/vpn/bgp`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/vpn/bgp`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/vpn/bgp`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1341,8 +1196,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceVpnSiteToSiteVpn": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/vpn/siteToSiteVpn`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/vpn/siteToSiteVpn`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1351,13 +1206,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceVpnSiteToSiteVpn": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/vpn/siteToSiteVpn`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/vpn/siteToSiteVpn`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/vpn/siteToSiteVpn`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1367,8 +1220,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkApplianceWarmSpare": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/appliance/warmSpare`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/warmSpare`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1377,13 +1230,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkApplianceWarmSpare": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/warmSpare`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/warmSpare`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/appliance/warmSpare`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1393,13 +1244,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "swapNetworkApplianceWarmSpare": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/warmSpare/swap`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/appliance/warmSpare/swap`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/appliance/warmSpare/swap`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1409,8 +1258,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceDnsLocalProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/profiles`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/local/profiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1419,13 +1268,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationApplianceDnsLocalProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/profiles`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/local/profiles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/profiles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1435,8 +1282,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceDnsLocalProfilesAssignments": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/profiles/assignments`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/local/profiles/assignments`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1445,13 +1292,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "bulkOrganizationApplianceDnsLocalProfilesAssignmentsCreate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/profiles/assignments/bulkCreate`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/local/profiles/assignments/bulkCreate`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/profiles/assignments/bulkCreate`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1461,13 +1306,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationApplianceDnsLocalProfilesAssignmentsBulkDelete": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/profiles/assignments/bulkDelete`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/local/profiles/assignments/bulkDelete`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/profiles/assignments/bulkDelete`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1477,13 +1320,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationApplianceDnsLocalProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/profiles/{profileId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/local/profiles/{profileId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/profiles/{profileId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1493,13 +1334,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationApplianceDnsLocalProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/profiles/{profileId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/local/profiles/{profileId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/profiles/{profileId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1509,8 +1348,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceDnsLocalRecords": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/records`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/local/records`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1519,13 +1358,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationApplianceDnsLocalRecord": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/records`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/local/records`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/records`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1535,13 +1372,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationApplianceDnsLocalRecord": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/records/{recordId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/local/records/{recordId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/records/{recordId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1551,13 +1386,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationApplianceDnsLocalRecord": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/records/{recordId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/local/records/{recordId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/local/records/{recordId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1567,8 +1400,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceDnsSplitProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/split/profiles`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/split/profiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1577,13 +1410,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationApplianceDnsSplitProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/split/profiles`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/split/profiles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/split/profiles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1593,8 +1424,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceDnsSplitProfilesAssignments": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/split/profiles/assignments`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/split/profiles/assignments`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1603,13 +1434,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationApplianceDnsSplitProfilesAssignmentsBulkCreate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/split/profiles/assignments/bulkCreate`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/split/profiles/assignments/bulkCreate`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/split/profiles/assignments/bulkCreate`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1619,13 +1448,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationApplianceDnsSplitProfilesAssignmentsBulkDelete": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/split/profiles/assignments/bulkDelete`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/split/profiles/assignments/bulkDelete`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/split/profiles/assignments/bulkDelete`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1635,13 +1462,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationApplianceDnsSplitProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/split/profiles/{profileId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/split/profiles/{profileId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/split/profiles/{profileId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1651,13 +1476,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationApplianceDnsSplitProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/split/profiles/{profileId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/dns/split/profiles/{profileId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/appliance/dns/split/profiles/{profileId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1667,8 +1490,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceFirewallMulticastForwardingByNetwork": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/firewall/multicastForwarding/byNetwork`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/firewall/multicastForwarding/byNetwork`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1677,8 +1500,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceSdwanInternetPolicies": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/sdwan/internetPolicies`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/sdwan/internetPolicies`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1687,8 +1510,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceSecurityEvents": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/security/events`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/security/events`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1697,8 +1520,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceSecurityIntrusion": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/security/intrusion`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/security/intrusion`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1707,13 +1530,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationApplianceSecurityIntrusion": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/appliance/security/intrusion`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/security/intrusion`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/appliance/security/intrusion`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1723,8 +1544,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceTrafficShapingVpnExclusionsByNetwork": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/trafficShaping/vpnExclusions/byNetwork`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/trafficShaping/vpnExclusions/byNetwork`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1733,8 +1554,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceUplinkStatuses": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/uplink/statuses`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/uplink/statuses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1743,8 +1564,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceUplinksStatusesOverview": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/uplinks/statuses/overview`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/uplinks/statuses/overview`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1753,8 +1574,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceUplinksUsageByNetwork": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/uplinks/usage/byNetwork`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/uplinks/usage/byNetwork`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1763,8 +1584,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceVlans": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/vlans`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/vlans`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1773,8 +1594,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceVpnStats": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/vpn/stats`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/vpn/stats`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1783,8 +1604,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceVpnStatuses": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/vpn/statuses`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/vpn/statuses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1793,8 +1614,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceVpnThirdPartyVPNPeers": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/vpn/thirdPartyVPNPeers`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/vpn/thirdPartyVPNPeers`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1803,13 +1624,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationApplianceVpnThirdPartyVPNPeers": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/appliance/vpn/thirdPartyVPNPeers`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/vpn/thirdPartyVPNPeers`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/appliance/vpn/thirdPartyVPNPeers`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1819,8 +1638,8 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApplianceVpnVpnFirewallRules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/appliance/vpn/vpnFirewallRules`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/vpn/vpnFirewallRules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1829,13 +1648,11 @@ export async function _appliance(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationApplianceVpnVpnFirewallRules": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/appliance/vpn/vpnFirewallRules`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/appliance/vpn/vpnFirewallRules`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/appliance/vpn/vpnFirewallRules`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1850,5 +1667,142 @@ export async function _appliance(client: any, params: any): Promise<any> {
 }
 
 export const applianceEndpoints = [
-  "getDeviceApplianceDhcpSubnets","getDeviceAppliancePerformance","getDeviceAppliancePrefixesDelegated","getDeviceAppliancePrefixesDelegatedVlanAssignments","getDeviceApplianceRadioSettings","updateDeviceApplianceRadioSettings","getDeviceApplianceUplinksSettings","updateDeviceApplianceUplinksSettings","createDeviceApplianceVmxAuthenticationToken","getNetworkApplianceClientSecurityEvents","getNetworkApplianceConnectivityMonitoringDestinations","updateNetworkApplianceConnectivityMonitoringDestinations","getNetworkApplianceContentFiltering","updateNetworkApplianceContentFiltering","getNetworkApplianceContentFilteringCategories","getNetworkApplianceFirewallCellularFirewallRules","updateNetworkApplianceFirewallCellularFirewallRules","getNetworkApplianceFirewallFirewalledServices","getNetworkApplianceFirewallFirewalledService","updateNetworkApplianceFirewallFirewalledService","getNetworkApplianceFirewallInboundCellularFirewallRules","updateNetworkApplianceFirewallInboundCellularFirewallRules","getNetworkApplianceFirewallInboundFirewallRules","updateNetworkApplianceFirewallInboundFirewallRules","getNetworkApplianceFirewallL3FirewallRules","updateNetworkApplianceFirewallL3FirewallRules","getNetworkApplianceFirewallL7FirewallRules","updateNetworkApplianceFirewallL7FirewallRules","getNetworkApplianceFirewallL7FirewallRulesApplicationCategories","updateNetworkApplianceFirewallMulticastForwarding","getNetworkApplianceFirewallOneToManyNatRules","updateNetworkApplianceFirewallOneToManyNatRules","getNetworkApplianceFirewallOneToOneNatRules","updateNetworkApplianceFirewallOneToOneNatRules","getNetworkApplianceFirewallPortForwardingRules","updateNetworkApplianceFirewallPortForwardingRules","getNetworkApplianceFirewallSettings","updateNetworkApplianceFirewallSettings","getNetworkAppliancePorts","getNetworkAppliancePort","updateNetworkAppliancePort","getNetworkAppliancePrefixesDelegatedStatics","createNetworkAppliancePrefixesDelegatedStatic","getNetworkAppliancePrefixesDelegatedStatic","updateNetworkAppliancePrefixesDelegatedStatic","deleteNetworkAppliancePrefixesDelegatedStatic","getNetworkApplianceRfProfiles","createNetworkApplianceRfProfile","updateNetworkApplianceRfProfile","deleteNetworkApplianceRfProfile","getNetworkApplianceRfProfile","updateNetworkApplianceSdwanInternetPolicies","getNetworkApplianceSecurityEvents","getNetworkApplianceSecurityIntrusion","updateNetworkApplianceSecurityIntrusion","getNetworkApplianceSecurityMalware","updateNetworkApplianceSecurityMalware","getNetworkApplianceSettings","updateNetworkApplianceSettings","getNetworkApplianceSingleLan","updateNetworkApplianceSingleLan","getNetworkApplianceSsids","getNetworkApplianceSsid","updateNetworkApplianceSsid","getNetworkApplianceStaticRoutes","createNetworkApplianceStaticRoute","getNetworkApplianceStaticRoute","updateNetworkApplianceStaticRoute","deleteNetworkApplianceStaticRoute","getNetworkApplianceTrafficShaping","updateNetworkApplianceTrafficShaping","getNetworkApplianceTrafficShapingCustomPerformanceClasses","createNetworkApplianceTrafficShapingCustomPerformanceClass","getNetworkApplianceTrafficShapingCustomPerformanceClass","updateNetworkApplianceTrafficShapingCustomPerformanceClass","deleteNetworkApplianceTrafficShapingCustomPerformanceClass","updateNetworkApplianceTrafficShapingRules","getNetworkApplianceTrafficShapingRules","getNetworkApplianceTrafficShapingUplinkBandwidth","updateNetworkApplianceTrafficShapingUplinkBandwidth","getNetworkApplianceTrafficShapingUplinkSelection","updateNetworkApplianceTrafficShapingUplinkSelection","updateNetworkApplianceTrafficShapingVpnExclusions","connectNetworkApplianceUmbrellaAccount","disconnectNetworkApplianceUmbrellaAccount","disableNetworkApplianceUmbrellaProtection","enableNetworkApplianceUmbrellaProtection","excludeNetworkApplianceUmbrellaDomains","policiesNetworkApplianceUmbrella","getNetworkApplianceUplinksUsageHistory","getNetworkApplianceVlans","createNetworkApplianceVlan","getNetworkApplianceVlansSettings","updateNetworkApplianceVlansSettings","getNetworkApplianceVlan","updateNetworkApplianceVlan","deleteNetworkApplianceVlan","getNetworkApplianceVpnBgp","updateNetworkApplianceVpnBgp","getNetworkApplianceVpnSiteToSiteVpn","updateNetworkApplianceVpnSiteToSiteVpn","getNetworkApplianceWarmSpare","updateNetworkApplianceWarmSpare","swapNetworkApplianceWarmSpare","getOrganizationApplianceDnsLocalProfiles","createOrganizationApplianceDnsLocalProfile","getOrganizationApplianceDnsLocalProfilesAssignments","bulkOrganizationApplianceDnsLocalProfilesAssignmentsCreate","createOrganizationApplianceDnsLocalProfilesAssignmentsBulkDelete","updateOrganizationApplianceDnsLocalProfile","deleteOrganizationApplianceDnsLocalProfile","getOrganizationApplianceDnsLocalRecords","createOrganizationApplianceDnsLocalRecord","updateOrganizationApplianceDnsLocalRecord","deleteOrganizationApplianceDnsLocalRecord","getOrganizationApplianceDnsSplitProfiles","createOrganizationApplianceDnsSplitProfile","getOrganizationApplianceDnsSplitProfilesAssignments","createOrganizationApplianceDnsSplitProfilesAssignmentsBulkCreate","createOrganizationApplianceDnsSplitProfilesAssignmentsBulkDelete","updateOrganizationApplianceDnsSplitProfile","deleteOrganizationApplianceDnsSplitProfile","getOrganizationApplianceFirewallMulticastForwardingByNetwork","getOrganizationApplianceSdwanInternetPolicies","getOrganizationApplianceSecurityEvents","getOrganizationApplianceSecurityIntrusion","updateOrganizationApplianceSecurityIntrusion","getOrganizationApplianceTrafficShapingVpnExclusionsByNetwork","getOrganizationApplianceUplinkStatuses","getOrganizationApplianceUplinksStatusesOverview","getOrganizationApplianceUplinksUsageByNetwork","getOrganizationApplianceVlans","getOrganizationApplianceVpnStats","getOrganizationApplianceVpnStatuses","getOrganizationApplianceVpnThirdPartyVPNPeers","updateOrganizationApplianceVpnThirdPartyVPNPeers","getOrganizationApplianceVpnVpnFirewallRules","updateOrganizationApplianceVpnVpnFirewallRules"
+  "getDeviceApplianceDhcpSubnets",
+  "getDeviceAppliancePerformance",
+  "getDeviceAppliancePrefixesDelegated",
+  "getDeviceAppliancePrefixesDelegatedVlanAssignments",
+  "getDeviceApplianceRadioSettings",
+  "updateDeviceApplianceRadioSettings",
+  "getDeviceApplianceUplinksSettings",
+  "updateDeviceApplianceUplinksSettings",
+  "createDeviceApplianceVmxAuthenticationToken",
+  "getNetworkApplianceClientSecurityEvents",
+  "getNetworkApplianceConnectivityMonitoringDestinations",
+  "updateNetworkApplianceConnectivityMonitoringDestinations",
+  "getNetworkApplianceContentFiltering",
+  "updateNetworkApplianceContentFiltering",
+  "getNetworkApplianceContentFilteringCategories",
+  "getNetworkApplianceFirewallCellularFirewallRules",
+  "updateNetworkApplianceFirewallCellularFirewallRules",
+  "getNetworkApplianceFirewallFirewalledServices",
+  "getNetworkApplianceFirewallFirewalledService",
+  "updateNetworkApplianceFirewallFirewalledService",
+  "getNetworkApplianceFirewallInboundCellularFirewallRules",
+  "updateNetworkApplianceFirewallInboundCellularFirewallRules",
+  "getNetworkApplianceFirewallInboundFirewallRules",
+  "updateNetworkApplianceFirewallInboundFirewallRules",
+  "getNetworkApplianceFirewallL3FirewallRules",
+  "updateNetworkApplianceFirewallL3FirewallRules",
+  "getNetworkApplianceFirewallL7FirewallRules",
+  "updateNetworkApplianceFirewallL7FirewallRules",
+  "getNetworkApplianceFirewallL7FirewallRulesApplicationCategories",
+  "updateNetworkApplianceFirewallMulticastForwarding",
+  "getNetworkApplianceFirewallOneToManyNatRules",
+  "updateNetworkApplianceFirewallOneToManyNatRules",
+  "getNetworkApplianceFirewallOneToOneNatRules",
+  "updateNetworkApplianceFirewallOneToOneNatRules",
+  "getNetworkApplianceFirewallPortForwardingRules",
+  "updateNetworkApplianceFirewallPortForwardingRules",
+  "getNetworkApplianceFirewallSettings",
+  "updateNetworkApplianceFirewallSettings",
+  "getNetworkAppliancePorts",
+  "getNetworkAppliancePort",
+  "updateNetworkAppliancePort",
+  "getNetworkAppliancePrefixesDelegatedStatics",
+  "createNetworkAppliancePrefixesDelegatedStatic",
+  "getNetworkAppliancePrefixesDelegatedStatic",
+  "updateNetworkAppliancePrefixesDelegatedStatic",
+  "deleteNetworkAppliancePrefixesDelegatedStatic",
+  "getNetworkApplianceRfProfiles",
+  "createNetworkApplianceRfProfile",
+  "updateNetworkApplianceRfProfile",
+  "deleteNetworkApplianceRfProfile",
+  "getNetworkApplianceRfProfile",
+  "updateNetworkApplianceSdwanInternetPolicies",
+  "getNetworkApplianceSecurityEvents",
+  "getNetworkApplianceSecurityIntrusion",
+  "updateNetworkApplianceSecurityIntrusion",
+  "getNetworkApplianceSecurityMalware",
+  "updateNetworkApplianceSecurityMalware",
+  "getNetworkApplianceSettings",
+  "updateNetworkApplianceSettings",
+  "getNetworkApplianceSingleLan",
+  "updateNetworkApplianceSingleLan",
+  "getNetworkApplianceSsids",
+  "getNetworkApplianceSsid",
+  "updateNetworkApplianceSsid",
+  "getNetworkApplianceStaticRoutes",
+  "createNetworkApplianceStaticRoute",
+  "getNetworkApplianceStaticRoute",
+  "updateNetworkApplianceStaticRoute",
+  "deleteNetworkApplianceStaticRoute",
+  "getNetworkApplianceTrafficShaping",
+  "updateNetworkApplianceTrafficShaping",
+  "getNetworkApplianceTrafficShapingCustomPerformanceClasses",
+  "createNetworkApplianceTrafficShapingCustomPerformanceClass",
+  "getNetworkApplianceTrafficShapingCustomPerformanceClass",
+  "updateNetworkApplianceTrafficShapingCustomPerformanceClass",
+  "deleteNetworkApplianceTrafficShapingCustomPerformanceClass",
+  "updateNetworkApplianceTrafficShapingRules",
+  "getNetworkApplianceTrafficShapingRules",
+  "getNetworkApplianceTrafficShapingUplinkBandwidth",
+  "updateNetworkApplianceTrafficShapingUplinkBandwidth",
+  "getNetworkApplianceTrafficShapingUplinkSelection",
+  "updateNetworkApplianceTrafficShapingUplinkSelection",
+  "updateNetworkApplianceTrafficShapingVpnExclusions",
+  "connectNetworkApplianceUmbrellaAccount",
+  "disconnectNetworkApplianceUmbrellaAccount",
+  "disableNetworkApplianceUmbrellaProtection",
+  "enableNetworkApplianceUmbrellaProtection",
+  "excludeNetworkApplianceUmbrellaDomains",
+  "policiesNetworkApplianceUmbrella",
+  "getNetworkApplianceUplinksUsageHistory",
+  "getNetworkApplianceVlans",
+  "createNetworkApplianceVlan",
+  "getNetworkApplianceVlansSettings",
+  "updateNetworkApplianceVlansSettings",
+  "getNetworkApplianceVlan",
+  "updateNetworkApplianceVlan",
+  "deleteNetworkApplianceVlan",
+  "getNetworkApplianceVpnBgp",
+  "updateNetworkApplianceVpnBgp",
+  "getNetworkApplianceVpnSiteToSiteVpn",
+  "updateNetworkApplianceVpnSiteToSiteVpn",
+  "getNetworkApplianceWarmSpare",
+  "updateNetworkApplianceWarmSpare",
+  "swapNetworkApplianceWarmSpare",
+  "getOrganizationApplianceDnsLocalProfiles",
+  "createOrganizationApplianceDnsLocalProfile",
+  "getOrganizationApplianceDnsLocalProfilesAssignments",
+  "bulkOrganizationApplianceDnsLocalProfilesAssignmentsCreate",
+  "createOrganizationApplianceDnsLocalProfilesAssignmentsBulkDelete",
+  "updateOrganizationApplianceDnsLocalProfile",
+  "deleteOrganizationApplianceDnsLocalProfile",
+  "getOrganizationApplianceDnsLocalRecords",
+  "createOrganizationApplianceDnsLocalRecord",
+  "updateOrganizationApplianceDnsLocalRecord",
+  "deleteOrganizationApplianceDnsLocalRecord",
+  "getOrganizationApplianceDnsSplitProfiles",
+  "createOrganizationApplianceDnsSplitProfile",
+  "getOrganizationApplianceDnsSplitProfilesAssignments",
+  "createOrganizationApplianceDnsSplitProfilesAssignmentsBulkCreate",
+  "createOrganizationApplianceDnsSplitProfilesAssignmentsBulkDelete",
+  "updateOrganizationApplianceDnsSplitProfile",
+  "deleteOrganizationApplianceDnsSplitProfile",
+  "getOrganizationApplianceFirewallMulticastForwardingByNetwork",
+  "getOrganizationApplianceSdwanInternetPolicies",
+  "getOrganizationApplianceSecurityEvents",
+  "getOrganizationApplianceSecurityIntrusion",
+  "updateOrganizationApplianceSecurityIntrusion",
+  "getOrganizationApplianceTrafficShapingVpnExclusionsByNetwork",
+  "getOrganizationApplianceUplinkStatuses",
+  "getOrganizationApplianceUplinksStatusesOverview",
+  "getOrganizationApplianceUplinksUsageByNetwork",
+  "getOrganizationApplianceVlans",
+  "getOrganizationApplianceVpnStats",
+  "getOrganizationApplianceVpnStatuses",
+  "getOrganizationApplianceVpnThirdPartyVPNPeers",
+  "updateOrganizationApplianceVpnThirdPartyVPNPeers",
+  "getOrganizationApplianceVpnVpnFirewallRules",
+  "updateOrganizationApplianceVpnVpnFirewallRules"
 ];

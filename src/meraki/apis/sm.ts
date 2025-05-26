@@ -1,57 +1,12 @@
-function hasBodyPrefixedKeys(obj: any) {
-  // Check if obj is null or not an object
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-  // Get all keys of the object
-  const keys = Object.keys(obj);
-  // Check if any key starts with "body-"
-  return keys.some(key => key.startsWith('body-'));
-}
-
-function transformRequestBody(obj: any) {
-  const transformedObject: any = {};
-  // Loop through all keys in the original object
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "body-"
-    if (key.startsWith('body-')) {
-      // Create a new key without the "body-" prefix
-      const newKey = key.substring(5); // Remove first 5 characters ("body-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    } else {
-      // If the key doesn't start with "body-", keep it as is
-      transformedObject[key] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
-function transformQueryParams(obj: any) {
-  const transformedObject: any = {};
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "query-"
-    if (key.startsWith('query-')) {
-      // Create a new key without the "query-" prefix
-      const newKey = key.substring(6); // Remove first 6 characters ("query-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
 export async function _sm(client: any, params: any): Promise<any> {
   let response = {data: ''};
   switch (params.name) {
     case "createNetworkSmBypassActivationLockAttempt": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/bypassActivationLockAttempts`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/bypassActivationLockAttempts`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/bypassActivationLockAttempts`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -61,8 +16,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmBypassActivationLockAttempt": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/bypassActivationLockAttempts/{attemptId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/bypassActivationLockAttempts/{attemptId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -71,8 +26,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDevices": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -81,13 +36,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "checkinNetworkSmDevices": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/checkin`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/checkin`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/checkin`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -97,13 +50,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSmDevicesFields": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/sm/devices/fields`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/fields`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/sm/devices/fields`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -113,13 +64,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "lockNetworkSmDevices": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/lock`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/lock`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/lock`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -129,13 +78,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "modifyNetworkSmDevicesTags": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/modifyTags`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/modifyTags`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/modifyTags`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -145,13 +92,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "moveNetworkSmDevices": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/move`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/move`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/move`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -161,13 +106,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "rebootNetworkSmDevices": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/reboot`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/reboot`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/reboot`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -177,13 +120,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "shutdownNetworkSmDevices": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/shutdown`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/shutdown`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/shutdown`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -193,13 +134,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "wipeNetworkSmDevices": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/wipe`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/wipe`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/wipe`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -209,8 +148,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDeviceCellularUsageHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/cellularUsageHistory`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/cellularUsageHistory`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -219,8 +158,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDeviceCerts": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/certs`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/certs`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -229,8 +168,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDeviceConnectivity": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/connectivity`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/connectivity`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -239,8 +178,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDeviceDesktopLogs": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/desktopLogs`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/desktopLogs`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -249,8 +188,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDeviceDeviceCommandLogs": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/deviceCommandLogs`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/deviceCommandLogs`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -259,8 +198,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDeviceDeviceProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/deviceProfiles`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/deviceProfiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -269,13 +208,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "installNetworkSmDeviceApps": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/installApps`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/installApps`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/installApps`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -285,8 +222,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDeviceNetworkAdapters": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/networkAdapters`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/networkAdapters`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -295,8 +232,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDevicePerformanceHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/performanceHistory`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/performanceHistory`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -305,13 +242,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "refreshNetworkSmDeviceDetails": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/refreshDetails`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/refreshDetails`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/refreshDetails`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -321,8 +256,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDeviceRestrictions": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/restrictions`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/restrictions`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -331,8 +266,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDeviceSecurityCenters": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/securityCenters`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/securityCenters`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -341,8 +276,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDeviceSoftwares": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/softwares`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/softwares`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -351,13 +286,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "unenrollNetworkSmDevice": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/unenroll`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/unenroll`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/unenroll`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -367,13 +300,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "uninstallNetworkSmDeviceApps": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/uninstallApps`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/uninstallApps`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/uninstallApps`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -383,8 +314,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmDeviceWlanLists": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/devices/{deviceId}/wlanLists`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/devices/{deviceId}/wlanLists`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -393,8 +324,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/profiles`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/profiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -403,8 +334,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmTargetGroups": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/targetGroups`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/targetGroups`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -413,13 +344,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkSmTargetGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/targetGroups`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/targetGroups`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sm/targetGroups`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -429,8 +358,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmTargetGroup": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/targetGroups/{targetGroupId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/targetGroups/{targetGroupId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -439,13 +368,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSmTargetGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/sm/targetGroups/{targetGroupId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/targetGroups/{targetGroupId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/sm/targetGroups/{targetGroupId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -455,13 +382,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSmTargetGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/sm/targetGroups/{targetGroupId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/targetGroups/{targetGroupId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/sm/targetGroups/{targetGroupId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -471,8 +396,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmTrustedAccessConfigs": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/trustedAccessConfigs`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/trustedAccessConfigs`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -481,8 +406,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmUserAccessDevices": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/userAccessDevices`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/userAccessDevices`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -491,13 +416,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSmUserAccessDevice": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/sm/userAccessDevices/{userAccessDeviceId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sm/userAccessDevices/{userAccessDeviceId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/sm/userAccessDevices/{userAccessDeviceId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -507,8 +430,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmUsers": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/users`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/users`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -517,8 +440,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmUserDeviceProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/users/{userId}/deviceProfiles`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/users/{userId}/deviceProfiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -527,8 +450,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSmUserSoftwares": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sm/users/{userId}/softwares`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sm/users/{userId}/softwares`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -537,8 +460,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSmAdminsRoles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sm/admins/roles`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/admins/roles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -547,13 +470,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSmAdminsRole": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/sm/admins/roles`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/admins/roles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/sm/admins/roles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -563,8 +484,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSmAdminsRole": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sm/admins/roles/{roleId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/admins/roles/{roleId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -573,13 +494,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSmAdminsRole": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/sm/admins/roles/{roleId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/admins/roles/{roleId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/sm/admins/roles/{roleId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -589,13 +508,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSmAdminsRole": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/sm/admins/roles/{roleId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/admins/roles/{roleId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/sm/admins/roles/{roleId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -605,8 +522,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSmApnsCert": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sm/apnsCert`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/apnsCert`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -615,13 +532,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSmAppleCloudEnrollmentSyncJob": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/sm/apple/cloudEnrollment/syncJobs`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/apple/cloudEnrollment/syncJobs`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/sm/apple/cloudEnrollment/syncJobs`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -631,8 +546,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSmAppleCloudEnrollmentSyncJob": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sm/apple/cloudEnrollment/syncJobs/{syncJobId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/apple/cloudEnrollment/syncJobs/{syncJobId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -641,13 +556,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSmBulkEnrollmentToken": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/sm/bulkEnrollment/token`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/bulkEnrollment/token`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/sm/bulkEnrollment/token`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -657,8 +570,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSmBulkEnrollmentToken": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sm/bulkEnrollment/token/{tokenId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/bulkEnrollment/token/{tokenId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -667,13 +580,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSmBulkEnrollmentToken": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/sm/bulkEnrollment/token/{tokenId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/bulkEnrollment/token/{tokenId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/sm/bulkEnrollment/token/{tokenId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -683,13 +594,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSmBulkEnrollmentToken": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/sm/bulkEnrollment/token/{tokenId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/bulkEnrollment/token/{tokenId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/sm/bulkEnrollment/token/{tokenId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -699,8 +608,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSmBulkEnrollmentTokens": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sm/bulkEnrollment/tokens`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/bulkEnrollment/tokens`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -709,13 +618,11 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSmSentryPoliciesAssignments": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/sm/sentry/policies/assignments`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/sentry/policies/assignments`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/sm/sentry/policies/assignments`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -725,8 +632,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSmSentryPoliciesAssignmentsByNetwork": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sm/sentry/policies/assignments/byNetwork`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/sentry/policies/assignments/byNetwork`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -735,8 +642,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSmVppAccounts": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sm/vppAccounts`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/vppAccounts`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -745,8 +652,8 @@ export async function _sm(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSmVppAccount": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sm/vppAccounts/{vppAccountId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sm/vppAccounts/{vppAccountId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -760,5 +667,60 @@ export async function _sm(client: any, params: any): Promise<any> {
 }
 
 export const smEndpoints = [
-  "createNetworkSmBypassActivationLockAttempt","getNetworkSmBypassActivationLockAttempt","getNetworkSmDevices","checkinNetworkSmDevices","updateNetworkSmDevicesFields","lockNetworkSmDevices","modifyNetworkSmDevicesTags","moveNetworkSmDevices","rebootNetworkSmDevices","shutdownNetworkSmDevices","wipeNetworkSmDevices","getNetworkSmDeviceCellularUsageHistory","getNetworkSmDeviceCerts","getNetworkSmDeviceConnectivity","getNetworkSmDeviceDesktopLogs","getNetworkSmDeviceDeviceCommandLogs","getNetworkSmDeviceDeviceProfiles","installNetworkSmDeviceApps","getNetworkSmDeviceNetworkAdapters","getNetworkSmDevicePerformanceHistory","refreshNetworkSmDeviceDetails","getNetworkSmDeviceRestrictions","getNetworkSmDeviceSecurityCenters","getNetworkSmDeviceSoftwares","unenrollNetworkSmDevice","uninstallNetworkSmDeviceApps","getNetworkSmDeviceWlanLists","getNetworkSmProfiles","getNetworkSmTargetGroups","createNetworkSmTargetGroup","getNetworkSmTargetGroup","updateNetworkSmTargetGroup","deleteNetworkSmTargetGroup","getNetworkSmTrustedAccessConfigs","getNetworkSmUserAccessDevices","deleteNetworkSmUserAccessDevice","getNetworkSmUsers","getNetworkSmUserDeviceProfiles","getNetworkSmUserSoftwares","getOrganizationSmAdminsRoles","createOrganizationSmAdminsRole","getOrganizationSmAdminsRole","updateOrganizationSmAdminsRole","deleteOrganizationSmAdminsRole","getOrganizationSmApnsCert","createOrganizationSmAppleCloudEnrollmentSyncJob","getOrganizationSmAppleCloudEnrollmentSyncJob","createOrganizationSmBulkEnrollmentToken","getOrganizationSmBulkEnrollmentToken","updateOrganizationSmBulkEnrollmentToken","deleteOrganizationSmBulkEnrollmentToken","getOrganizationSmBulkEnrollmentTokens","updateOrganizationSmSentryPoliciesAssignments","getOrganizationSmSentryPoliciesAssignmentsByNetwork","getOrganizationSmVppAccounts","getOrganizationSmVppAccount"
+  "createNetworkSmBypassActivationLockAttempt",
+  "getNetworkSmBypassActivationLockAttempt",
+  "getNetworkSmDevices",
+  "checkinNetworkSmDevices",
+  "updateNetworkSmDevicesFields",
+  "lockNetworkSmDevices",
+  "modifyNetworkSmDevicesTags",
+  "moveNetworkSmDevices",
+  "rebootNetworkSmDevices",
+  "shutdownNetworkSmDevices",
+  "wipeNetworkSmDevices",
+  "getNetworkSmDeviceCellularUsageHistory",
+  "getNetworkSmDeviceCerts",
+  "getNetworkSmDeviceConnectivity",
+  "getNetworkSmDeviceDesktopLogs",
+  "getNetworkSmDeviceDeviceCommandLogs",
+  "getNetworkSmDeviceDeviceProfiles",
+  "installNetworkSmDeviceApps",
+  "getNetworkSmDeviceNetworkAdapters",
+  "getNetworkSmDevicePerformanceHistory",
+  "refreshNetworkSmDeviceDetails",
+  "getNetworkSmDeviceRestrictions",
+  "getNetworkSmDeviceSecurityCenters",
+  "getNetworkSmDeviceSoftwares",
+  "unenrollNetworkSmDevice",
+  "uninstallNetworkSmDeviceApps",
+  "getNetworkSmDeviceWlanLists",
+  "getNetworkSmProfiles",
+  "getNetworkSmTargetGroups",
+  "createNetworkSmTargetGroup",
+  "getNetworkSmTargetGroup",
+  "updateNetworkSmTargetGroup",
+  "deleteNetworkSmTargetGroup",
+  "getNetworkSmTrustedAccessConfigs",
+  "getNetworkSmUserAccessDevices",
+  "deleteNetworkSmUserAccessDevice",
+  "getNetworkSmUsers",
+  "getNetworkSmUserDeviceProfiles",
+  "getNetworkSmUserSoftwares",
+  "getOrganizationSmAdminsRoles",
+  "createOrganizationSmAdminsRole",
+  "getOrganizationSmAdminsRole",
+  "updateOrganizationSmAdminsRole",
+  "deleteOrganizationSmAdminsRole",
+  "getOrganizationSmApnsCert",
+  "createOrganizationSmAppleCloudEnrollmentSyncJob",
+  "getOrganizationSmAppleCloudEnrollmentSyncJob",
+  "createOrganizationSmBulkEnrollmentToken",
+  "getOrganizationSmBulkEnrollmentToken",
+  "updateOrganizationSmBulkEnrollmentToken",
+  "deleteOrganizationSmBulkEnrollmentToken",
+  "getOrganizationSmBulkEnrollmentTokens",
+  "updateOrganizationSmSentryPoliciesAssignments",
+  "getOrganizationSmSentryPoliciesAssignmentsByNetwork",
+  "getOrganizationSmVppAccounts",
+  "getOrganizationSmVppAccount"
 ];

@@ -1,52 +1,9 @@
-function hasBodyPrefixedKeys(obj: any) {
-  // Check if obj is null or not an object
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-  // Get all keys of the object
-  const keys = Object.keys(obj);
-  // Check if any key starts with "body-"
-  return keys.some(key => key.startsWith('body-'));
-}
-
-function transformRequestBody(obj: any) {
-  const transformedObject: any = {};
-  // Loop through all keys in the original object
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "body-"
-    if (key.startsWith('body-')) {
-      // Create a new key without the "body-" prefix
-      const newKey = key.substring(5); // Remove first 5 characters ("body-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    } else {
-      // If the key doesn't start with "body-", keep it as is
-      transformedObject[key] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
-function transformQueryParams(obj: any) {
-  const transformedObject: any = {};
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "query-"
-    if (key.startsWith('query-')) {
-      // Create a new key without the "query-" prefix
-      const newKey = key.substring(6); // Remove first 6 characters ("query-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
 export async function _camera(client: any, params: any): Promise<any> {
   let response = {data: ''};
   switch (params.name) {
     case "getDeviceCameraAnalyticsLive": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/camera/analytics/live`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/camera/analytics/live`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -55,8 +12,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCameraAnalyticsOverview": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/camera/analytics/overview`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/camera/analytics/overview`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -65,8 +22,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCameraAnalyticsRecent": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/camera/analytics/recent`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/camera/analytics/recent`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -75,8 +32,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCameraAnalyticsZones": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/camera/analytics/zones`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/camera/analytics/zones`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -85,8 +42,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCameraAnalyticsZoneHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/camera/analytics/zones/{zoneId}/history`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/camera/analytics/zones/{zoneId}/history`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -95,8 +52,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCameraCustomAnalytics": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/camera/customAnalytics`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/camera/customAnalytics`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -105,13 +62,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceCameraCustomAnalytics": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/camera/customAnalytics`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/camera/customAnalytics`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/camera/customAnalytics`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -121,13 +76,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "generateDeviceCameraSnapshot": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/camera/generateSnapshot`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/camera/generateSnapshot`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/camera/generateSnapshot`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -137,8 +90,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCameraQualityAndRetention": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/camera/qualityAndRetention`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/camera/qualityAndRetention`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -147,13 +100,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceCameraQualityAndRetention": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/camera/qualityAndRetention`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/camera/qualityAndRetention`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/camera/qualityAndRetention`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -163,8 +114,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCameraSense": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/camera/sense`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/camera/sense`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -173,13 +124,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceCameraSense": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/camera/sense`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/camera/sense`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/camera/sense`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -189,8 +138,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCameraSenseObjectDetectionModels": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/camera/sense/objectDetectionModels`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/camera/sense/objectDetectionModels`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -199,8 +148,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCameraVideoSettings": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/camera/video/settings`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/camera/video/settings`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -209,13 +158,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceCameraVideoSettings": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/camera/video/settings`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/camera/video/settings`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/camera/video/settings`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -225,8 +172,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCameraVideoLink": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/camera/videoLink`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/camera/videoLink`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -235,8 +182,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCameraWirelessProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/camera/wirelessProfiles`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/camera/wirelessProfiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -245,13 +192,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceCameraWirelessProfiles": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/camera/wirelessProfiles`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/camera/wirelessProfiles`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/camera/wirelessProfiles`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -261,8 +206,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkCameraQualityRetentionProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/camera/qualityRetentionProfiles`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/camera/qualityRetentionProfiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -271,13 +216,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkCameraQualityRetentionProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/camera/qualityRetentionProfiles`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/camera/qualityRetentionProfiles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/camera/qualityRetentionProfiles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -287,8 +230,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkCameraQualityRetentionProfile": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/camera/qualityRetentionProfiles/{qualityRetentionProfileId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/camera/qualityRetentionProfiles/{qualityRetentionProfileId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -297,13 +240,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkCameraQualityRetentionProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/camera/qualityRetentionProfiles/{qualityRetentionProfileId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/camera/qualityRetentionProfiles/{qualityRetentionProfileId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/camera/qualityRetentionProfiles/{qualityRetentionProfileId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -313,13 +254,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkCameraQualityRetentionProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/camera/qualityRetentionProfiles/{qualityRetentionProfileId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/camera/qualityRetentionProfiles/{qualityRetentionProfileId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/camera/qualityRetentionProfiles/{qualityRetentionProfileId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -329,8 +268,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkCameraSchedules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/camera/schedules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/camera/schedules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -339,13 +278,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkCameraWirelessProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/camera/wirelessProfiles`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/camera/wirelessProfiles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/camera/wirelessProfiles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -355,8 +292,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkCameraWirelessProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/camera/wirelessProfiles`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/camera/wirelessProfiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -365,8 +302,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkCameraWirelessProfile": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/camera/wirelessProfiles/{wirelessProfileId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/camera/wirelessProfiles/{wirelessProfileId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -375,13 +312,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkCameraWirelessProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/camera/wirelessProfiles/{wirelessProfileId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/camera/wirelessProfiles/{wirelessProfileId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/camera/wirelessProfiles/{wirelessProfileId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -391,13 +326,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkCameraWirelessProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/camera/wirelessProfiles/{wirelessProfileId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/camera/wirelessProfiles/{wirelessProfileId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/camera/wirelessProfiles/{wirelessProfileId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -407,8 +340,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCameraBoundariesAreasByDevice": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/camera/boundaries/areas/byDevice`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/boundaries/areas/byDevice`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -417,8 +350,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCameraBoundariesLinesByDevice": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/camera/boundaries/lines/byDevice`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/boundaries/lines/byDevice`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -427,8 +360,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCameraCustomAnalyticsArtifacts": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/camera/customAnalytics/artifacts`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/customAnalytics/artifacts`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -437,13 +370,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationCameraCustomAnalyticsArtifact": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/camera/customAnalytics/artifacts`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/customAnalytics/artifacts`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/camera/customAnalytics/artifacts`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -453,8 +384,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCameraCustomAnalyticsArtifact": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/camera/customAnalytics/artifacts/{artifactId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/customAnalytics/artifacts/{artifactId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -463,13 +394,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationCameraCustomAnalyticsArtifact": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/camera/customAnalytics/artifacts/{artifactId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/customAnalytics/artifacts/{artifactId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/camera/customAnalytics/artifacts/{artifactId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -479,8 +408,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCameraDetectionsHistoryByBoundaryByInterval": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/camera/detections/history/byBoundary/byInterval`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/detections/history/byBoundary/byInterval`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -489,8 +418,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCameraOnboardingStatuses": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/camera/onboarding/statuses`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/onboarding/statuses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -499,13 +428,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationCameraOnboardingStatuses": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/camera/onboarding/statuses`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/onboarding/statuses`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/camera/onboarding/statuses`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -515,8 +442,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCameraPermissions": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/camera/permissions`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/permissions`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -525,8 +452,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCameraPermission": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/camera/permissions/{permissionScopeId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/permissions/{permissionScopeId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -535,8 +462,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCameraRoles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/camera/roles`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/roles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -545,13 +472,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationCameraRole": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/camera/roles`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/roles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/camera/roles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -561,8 +486,8 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCameraRole": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/camera/roles/{roleId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/roles/{roleId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -571,13 +496,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationCameraRole": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/camera/roles/{roleId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/roles/{roleId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/camera/roles/{roleId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -587,13 +510,11 @@ export async function _camera(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationCameraRole": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/camera/roles/{roleId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/camera/roles/{roleId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/camera/roles/{roleId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -608,5 +529,49 @@ export async function _camera(client: any, params: any): Promise<any> {
 }
 
 export const cameraEndpoints = [
-  "getDeviceCameraAnalyticsLive","getDeviceCameraAnalyticsOverview","getDeviceCameraAnalyticsRecent","getDeviceCameraAnalyticsZones","getDeviceCameraAnalyticsZoneHistory","getDeviceCameraCustomAnalytics","updateDeviceCameraCustomAnalytics","generateDeviceCameraSnapshot","getDeviceCameraQualityAndRetention","updateDeviceCameraQualityAndRetention","getDeviceCameraSense","updateDeviceCameraSense","getDeviceCameraSenseObjectDetectionModels","getDeviceCameraVideoSettings","updateDeviceCameraVideoSettings","getDeviceCameraVideoLink","getDeviceCameraWirelessProfiles","updateDeviceCameraWirelessProfiles","getNetworkCameraQualityRetentionProfiles","createNetworkCameraQualityRetentionProfile","getNetworkCameraQualityRetentionProfile","updateNetworkCameraQualityRetentionProfile","deleteNetworkCameraQualityRetentionProfile","getNetworkCameraSchedules","createNetworkCameraWirelessProfile","getNetworkCameraWirelessProfiles","getNetworkCameraWirelessProfile","updateNetworkCameraWirelessProfile","deleteNetworkCameraWirelessProfile","getOrganizationCameraBoundariesAreasByDevice","getOrganizationCameraBoundariesLinesByDevice","getOrganizationCameraCustomAnalyticsArtifacts","createOrganizationCameraCustomAnalyticsArtifact","getOrganizationCameraCustomAnalyticsArtifact","deleteOrganizationCameraCustomAnalyticsArtifact","getOrganizationCameraDetectionsHistoryByBoundaryByInterval","getOrganizationCameraOnboardingStatuses","updateOrganizationCameraOnboardingStatuses","getOrganizationCameraPermissions","getOrganizationCameraPermission","getOrganizationCameraRoles","createOrganizationCameraRole","getOrganizationCameraRole","deleteOrganizationCameraRole","updateOrganizationCameraRole"
+  "getDeviceCameraAnalyticsLive",
+  "getDeviceCameraAnalyticsOverview",
+  "getDeviceCameraAnalyticsRecent",
+  "getDeviceCameraAnalyticsZones",
+  "getDeviceCameraAnalyticsZoneHistory",
+  "getDeviceCameraCustomAnalytics",
+  "updateDeviceCameraCustomAnalytics",
+  "generateDeviceCameraSnapshot",
+  "getDeviceCameraQualityAndRetention",
+  "updateDeviceCameraQualityAndRetention",
+  "getDeviceCameraSense",
+  "updateDeviceCameraSense",
+  "getDeviceCameraSenseObjectDetectionModels",
+  "getDeviceCameraVideoSettings",
+  "updateDeviceCameraVideoSettings",
+  "getDeviceCameraVideoLink",
+  "getDeviceCameraWirelessProfiles",
+  "updateDeviceCameraWirelessProfiles",
+  "getNetworkCameraQualityRetentionProfiles",
+  "createNetworkCameraQualityRetentionProfile",
+  "getNetworkCameraQualityRetentionProfile",
+  "updateNetworkCameraQualityRetentionProfile",
+  "deleteNetworkCameraQualityRetentionProfile",
+  "getNetworkCameraSchedules",
+  "createNetworkCameraWirelessProfile",
+  "getNetworkCameraWirelessProfiles",
+  "getNetworkCameraWirelessProfile",
+  "updateNetworkCameraWirelessProfile",
+  "deleteNetworkCameraWirelessProfile",
+  "getOrganizationCameraBoundariesAreasByDevice",
+  "getOrganizationCameraBoundariesLinesByDevice",
+  "getOrganizationCameraCustomAnalyticsArtifacts",
+  "createOrganizationCameraCustomAnalyticsArtifact",
+  "getOrganizationCameraCustomAnalyticsArtifact",
+  "deleteOrganizationCameraCustomAnalyticsArtifact",
+  "getOrganizationCameraDetectionsHistoryByBoundaryByInterval",
+  "getOrganizationCameraOnboardingStatuses",
+  "updateOrganizationCameraOnboardingStatuses",
+  "getOrganizationCameraPermissions",
+  "getOrganizationCameraPermission",
+  "getOrganizationCameraRoles",
+  "createOrganizationCameraRole",
+  "getOrganizationCameraRole",
+  "deleteOrganizationCameraRole",
+  "updateOrganizationCameraRole"
 ];

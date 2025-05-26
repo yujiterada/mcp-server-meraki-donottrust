@@ -1,6 +1,6 @@
 {
   "name": "mcp-server-meraki-donottrust",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "MCP server for interacting with Meraki",
   "type": "module",
   "bin": {

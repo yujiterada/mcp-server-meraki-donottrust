@@ -1,11 +1,11 @@
 <% Object.entries(pathTree).forEach(([category, toolNames]) => { -%>
 import {
-<% toolNames.forEach((toolName, index) => { -%>
+<% Object.keys(toolNames).forEach((toolName, index) => { -%>
   <%= toolName %>Tool,
 <% }); %>} from "./<%= category %>.js";
 
 export const <%= category %>Tools = [
-<% toolNames.forEach((toolName, index) => { -%>
+<% Object.keys(toolNames).forEach((toolName, index) => { -%>
   <%= toolName %>Tool,
 <% }); %>];
 

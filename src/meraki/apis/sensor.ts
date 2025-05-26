@@ -1,52 +1,9 @@
-function hasBodyPrefixedKeys(obj: any) {
-  // Check if obj is null or not an object
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-  // Get all keys of the object
-  const keys = Object.keys(obj);
-  // Check if any key starts with "body-"
-  return keys.some(key => key.startsWith('body-'));
-}
-
-function transformRequestBody(obj: any) {
-  const transformedObject: any = {};
-  // Loop through all keys in the original object
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "body-"
-    if (key.startsWith('body-')) {
-      // Create a new key without the "body-" prefix
-      const newKey = key.substring(5); // Remove first 5 characters ("body-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    } else {
-      // If the key doesn't start with "body-", keep it as is
-      transformedObject[key] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
-function transformQueryParams(obj: any) {
-  const transformedObject: any = {};
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "query-"
-    if (key.startsWith('query-')) {
-      // Create a new key without the "query-" prefix
-      const newKey = key.substring(6); // Remove first 6 characters ("query-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
 export async function _sensor(client: any, params: any): Promise<any> {
   let response = {data: ''};
   switch (params.name) {
     case "getDeviceSensorCommands": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/sensor/commands`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/sensor/commands`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -55,13 +12,11 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceSensorCommand": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/sensor/commands`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/sensor/commands`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/sensor/commands`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -71,8 +26,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceSensorCommand": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/sensor/commands/{commandId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/sensor/commands/{commandId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -81,8 +36,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceSensorRelationships": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/sensor/relationships`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/sensor/relationships`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -91,13 +46,11 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceSensorRelationships": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/sensor/relationships`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/sensor/relationships`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/sensor/relationships`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -107,8 +60,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSensorAlertsCurrentOverviewByMetric": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sensor/alerts/current/overview/byMetric`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sensor/alerts/current/overview/byMetric`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -117,8 +70,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSensorAlertsOverviewByMetric": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sensor/alerts/overview/byMetric`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sensor/alerts/overview/byMetric`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -127,8 +80,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSensorAlertsProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sensor/alerts/profiles`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sensor/alerts/profiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -137,13 +90,11 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkSensorAlertsProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sensor/alerts/profiles`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sensor/alerts/profiles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/sensor/alerts/profiles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -153,8 +104,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSensorAlertsProfile": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sensor/alerts/profiles/{id}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sensor/alerts/profiles/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -163,13 +114,11 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSensorAlertsProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/sensor/alerts/profiles/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sensor/alerts/profiles/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/sensor/alerts/profiles/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -179,13 +128,11 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSensorAlertsProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/sensor/alerts/profiles/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sensor/alerts/profiles/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/sensor/alerts/profiles/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -195,8 +142,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSensorMqttBrokers": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sensor/mqttBrokers`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sensor/mqttBrokers`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -205,8 +152,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSensorMqttBroker": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sensor/mqttBrokers/{mqttBrokerId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sensor/mqttBrokers/{mqttBrokerId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -215,13 +162,11 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSensorMqttBroker": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/sensor/mqttBrokers/{mqttBrokerId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/sensor/mqttBrokers/{mqttBrokerId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/sensor/mqttBrokers/{mqttBrokerId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -231,8 +176,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSensorRelationships": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sensor/relationships`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sensor/relationships`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -241,8 +186,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSensorSchedules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/sensor/schedules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/sensor/schedules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -251,8 +196,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSensorAlerts": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sensor/alerts`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sensor/alerts`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -261,8 +206,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSensorReadingsHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sensor/readings/history`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sensor/readings/history`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -271,8 +216,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSensorReadingsHistoryByInterval": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sensor/readings/history/byInterval`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sensor/readings/history/byInterval`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -281,8 +226,8 @@ export async function _sensor(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSensorReadingsLatest": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sensor/readings/latest`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sensor/readings/latest`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -296,5 +241,25 @@ export async function _sensor(client: any, params: any): Promise<any> {
 }
 
 export const sensorEndpoints = [
-  "getDeviceSensorCommands","createDeviceSensorCommand","getDeviceSensorCommand","getDeviceSensorRelationships","updateDeviceSensorRelationships","getNetworkSensorAlertsCurrentOverviewByMetric","getNetworkSensorAlertsOverviewByMetric","getNetworkSensorAlertsProfiles","createNetworkSensorAlertsProfile","getNetworkSensorAlertsProfile","updateNetworkSensorAlertsProfile","deleteNetworkSensorAlertsProfile","getNetworkSensorMqttBrokers","getNetworkSensorMqttBroker","updateNetworkSensorMqttBroker","getNetworkSensorRelationships","getNetworkSensorSchedules","getOrganizationSensorAlerts","getOrganizationSensorReadingsHistory","getOrganizationSensorReadingsHistoryByInterval","getOrganizationSensorReadingsLatest"
+  "getDeviceSensorCommands",
+  "createDeviceSensorCommand",
+  "getDeviceSensorCommand",
+  "getDeviceSensorRelationships",
+  "updateDeviceSensorRelationships",
+  "getNetworkSensorAlertsCurrentOverviewByMetric",
+  "getNetworkSensorAlertsOverviewByMetric",
+  "getNetworkSensorAlertsProfiles",
+  "createNetworkSensorAlertsProfile",
+  "getNetworkSensorAlertsProfile",
+  "updateNetworkSensorAlertsProfile",
+  "deleteNetworkSensorAlertsProfile",
+  "getNetworkSensorMqttBrokers",
+  "getNetworkSensorMqttBroker",
+  "updateNetworkSensorMqttBroker",
+  "getNetworkSensorRelationships",
+  "getNetworkSensorSchedules",
+  "getOrganizationSensorAlerts",
+  "getOrganizationSensorReadingsHistory",
+  "getOrganizationSensorReadingsHistoryByInterval",
+  "getOrganizationSensorReadingsLatest"
 ];

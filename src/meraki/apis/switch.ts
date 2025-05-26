@@ -1,52 +1,9 @@
-function hasBodyPrefixedKeys(obj: any) {
-  // Check if obj is null or not an object
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-  // Get all keys of the object
-  const keys = Object.keys(obj);
-  // Check if any key starts with "body-"
-  return keys.some(key => key.startsWith('body-'));
-}
-
-function transformRequestBody(obj: any) {
-  const transformedObject: any = {};
-  // Loop through all keys in the original object
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "body-"
-    if (key.startsWith('body-')) {
-      // Create a new key without the "body-" prefix
-      const newKey = key.substring(5); // Remove first 5 characters ("body-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    } else {
-      // If the key doesn't start with "body-", keep it as is
-      transformedObject[key] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
-function transformQueryParams(obj: any) {
-  const transformedObject: any = {};
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "query-"
-    if (key.startsWith('query-')) {
-      // Create a new key without the "query-" prefix
-      const newKey = key.substring(6); // Remove first 6 characters ("query-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
 export async function _switch(client: any, params: any): Promise<any> {
   let response = {data: ''};
   switch (params.name) {
     case "getDeviceSwitchPorts": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/switch/ports`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/switch/ports`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -55,13 +12,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "cycleDeviceSwitchPorts": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/switch/ports/cycle`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/switch/ports/cycle`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/switch/ports/cycle`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -71,13 +26,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceSwitchPortsMirror": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/switch/ports/mirror`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/switch/ports/mirror`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/switch/ports/mirror`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -87,8 +40,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceSwitchPortsStatuses": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/switch/ports/statuses`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/switch/ports/statuses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -97,8 +50,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceSwitchPortsStatusesPackets": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/switch/ports/statuses/packets`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/switch/ports/statuses/packets`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -107,8 +60,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceSwitchPort": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/switch/ports/{portId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/switch/ports/{portId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -117,13 +70,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceSwitchPort": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/switch/ports/{portId}`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/switch/ports/{portId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/switch/ports/{portId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -133,8 +84,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceSwitchRoutingInterfaces": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/switch/routing/interfaces`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/switch/routing/interfaces`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -143,13 +94,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceSwitchRoutingInterface": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/switch/routing/interfaces`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/switch/routing/interfaces`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/switch/routing/interfaces`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -159,8 +108,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceSwitchRoutingInterface": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/switch/routing/interfaces/{interfaceId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/switch/routing/interfaces/{interfaceId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -169,13 +118,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceSwitchRoutingInterface": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/switch/routing/interfaces/{interfaceId}`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/switch/routing/interfaces/{interfaceId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/switch/routing/interfaces/{interfaceId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -185,13 +132,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteDeviceSwitchRoutingInterface": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/devices/${params.arguments["path-serial"]}/switch/routing/interfaces/{interfaceId}`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/switch/routing/interfaces/{interfaceId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/devices/${params.arguments["path-serial"]}/switch/routing/interfaces/{interfaceId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -201,8 +146,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceSwitchRoutingInterfaceDhcp": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/switch/routing/interfaces/{interfaceId}/dhcp`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/switch/routing/interfaces/{interfaceId}/dhcp`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -211,13 +156,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceSwitchRoutingInterfaceDhcp": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/switch/routing/interfaces/{interfaceId}/dhcp`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/switch/routing/interfaces/{interfaceId}/dhcp`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/switch/routing/interfaces/{interfaceId}/dhcp`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -227,8 +170,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceSwitchRoutingStaticRoutes": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/switch/routing/staticRoutes`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/switch/routing/staticRoutes`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -237,13 +180,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceSwitchRoutingStaticRoute": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/switch/routing/staticRoutes`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/switch/routing/staticRoutes`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/switch/routing/staticRoutes`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -253,8 +194,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceSwitchRoutingStaticRoute": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/switch/routing/staticRoutes/{staticRouteId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/switch/routing/staticRoutes/{staticRouteId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -263,13 +204,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceSwitchRoutingStaticRoute": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/switch/routing/staticRoutes/{staticRouteId}`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/switch/routing/staticRoutes/{staticRouteId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/switch/routing/staticRoutes/{staticRouteId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -279,13 +218,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteDeviceSwitchRoutingStaticRoute": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/devices/${params.arguments["path-serial"]}/switch/routing/staticRoutes/{staticRouteId}`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/switch/routing/staticRoutes/{staticRouteId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/devices/${params.arguments["path-serial"]}/switch/routing/staticRoutes/{staticRouteId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -295,8 +232,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceSwitchWarmSpare": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/switch/warmSpare`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/switch/warmSpare`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -305,13 +242,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceSwitchWarmSpare": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/switch/warmSpare`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/switch/warmSpare`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/switch/warmSpare`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -321,8 +256,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchAccessControlLists": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/accessControlLists`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/accessControlLists`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -331,13 +266,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchAccessControlLists": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/accessControlLists`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/accessControlLists`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/accessControlLists`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -347,8 +280,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchAccessPolicies": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/accessPolicies`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/accessPolicies`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -357,13 +290,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkSwitchAccessPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/accessPolicies`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/accessPolicies`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/accessPolicies`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -373,8 +304,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchAccessPolicy": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/accessPolicies/{accessPolicyNumber}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/accessPolicies/{accessPolicyNumber}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -383,13 +314,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchAccessPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/accessPolicies/{accessPolicyNumber}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/accessPolicies/{accessPolicyNumber}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/accessPolicies/{accessPolicyNumber}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -399,13 +328,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSwitchAccessPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/accessPolicies/{accessPolicyNumber}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/accessPolicies/{accessPolicyNumber}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/accessPolicies/{accessPolicyNumber}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -415,8 +342,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchAlternateManagementInterface": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/alternateManagementInterface`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/alternateManagementInterface`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -425,13 +352,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchAlternateManagementInterface": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/alternateManagementInterface`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/alternateManagementInterface`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/alternateManagementInterface`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -441,8 +366,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchDhcpV4ServersSeen": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/dhcp/v4/servers/seen`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/dhcp/v4/servers/seen`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -451,8 +376,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchDhcpServerPolicy": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/dhcpServerPolicy`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/dhcpServerPolicy`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -461,13 +386,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchDhcpServerPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/dhcpServerPolicy`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/dhcpServerPolicy`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/dhcpServerPolicy`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -477,8 +400,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchDhcpServerPolicyArpInspectionTrustedServers": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/dhcpServerPolicy/arpInspection/trustedServers`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/dhcpServerPolicy/arpInspection/trustedServers`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -487,13 +410,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkSwitchDhcpServerPolicyArpInspectionTrustedServer": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/dhcpServerPolicy/arpInspection/trustedServers`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/dhcpServerPolicy/arpInspection/trustedServers`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/dhcpServerPolicy/arpInspection/trustedServers`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -503,13 +424,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchDhcpServerPolicyArpInspectionTrustedServer": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/dhcpServerPolicy/arpInspection/trustedServers/{trustedServerId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/dhcpServerPolicy/arpInspection/trustedServers/{trustedServerId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/dhcpServerPolicy/arpInspection/trustedServers/{trustedServerId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -519,13 +438,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSwitchDhcpServerPolicyArpInspectionTrustedServer": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/dhcpServerPolicy/arpInspection/trustedServers/{trustedServerId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/dhcpServerPolicy/arpInspection/trustedServers/{trustedServerId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/dhcpServerPolicy/arpInspection/trustedServers/{trustedServerId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -535,8 +452,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchDhcpServerPolicyArpInspectionWarningsByDevice": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/dhcpServerPolicy/arpInspection/warnings/byDevice`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/dhcpServerPolicy/arpInspection/warnings/byDevice`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -545,8 +462,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchDscpToCosMappings": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/dscpToCosMappings`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/dscpToCosMappings`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -555,13 +472,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchDscpToCosMappings": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/dscpToCosMappings`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/dscpToCosMappings`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/dscpToCosMappings`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -571,8 +486,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchLinkAggregations": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/linkAggregations`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/linkAggregations`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -581,13 +496,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkSwitchLinkAggregation": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/linkAggregations`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/linkAggregations`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/linkAggregations`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -597,13 +510,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchLinkAggregation": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/linkAggregations/{linkAggregationId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/linkAggregations/{linkAggregationId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/linkAggregations/{linkAggregationId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -613,13 +524,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSwitchLinkAggregation": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/linkAggregations/{linkAggregationId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/linkAggregations/{linkAggregationId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/linkAggregations/{linkAggregationId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -629,8 +538,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchMtu": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/mtu`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/mtu`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -639,13 +548,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchMtu": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/mtu`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/mtu`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/mtu`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -655,8 +562,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchPortSchedules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/portSchedules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/portSchedules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -665,13 +572,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkSwitchPortSchedule": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/portSchedules`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/portSchedules`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/portSchedules`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -681,13 +586,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSwitchPortSchedule": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/portSchedules/{portScheduleId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/portSchedules/{portScheduleId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/portSchedules/{portScheduleId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -697,13 +600,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchPortSchedule": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/portSchedules/{portScheduleId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/portSchedules/{portScheduleId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/portSchedules/{portScheduleId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -713,8 +614,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchPortsProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/ports/profiles`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/ports/profiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -723,13 +624,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkSwitchPortsProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/ports/profiles`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/ports/profiles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/ports/profiles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -739,13 +638,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchPortsProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/ports/profiles/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/ports/profiles/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/ports/profiles/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -755,13 +652,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSwitchPortsProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/ports/profiles/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/ports/profiles/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/ports/profiles/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -771,8 +666,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchQosRules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/qosRules`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/qosRules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -781,13 +676,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkSwitchQosRule": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/qosRules`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/qosRules`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/qosRules`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -797,8 +690,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchQosRulesOrder": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/qosRules/order`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/qosRules/order`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -807,13 +700,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchQosRulesOrder": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/qosRules/order`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/qosRules/order`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/qosRules/order`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -823,8 +714,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchQosRule": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/qosRules/{qosRuleId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/qosRules/{qosRuleId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -833,13 +724,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSwitchQosRule": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/qosRules/{qosRuleId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/qosRules/{qosRuleId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/qosRules/{qosRuleId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -849,13 +738,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchQosRule": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/qosRules/{qosRuleId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/qosRules/{qosRuleId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/qosRules/{qosRuleId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -865,8 +752,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchRoutingMulticast": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/routing/multicast`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/routing/multicast`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -875,13 +762,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchRoutingMulticast": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/routing/multicast`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/routing/multicast`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/routing/multicast`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -891,8 +776,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchRoutingMulticastRendezvousPoints": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/routing/multicast/rendezvousPoints`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/routing/multicast/rendezvousPoints`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -901,13 +786,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkSwitchRoutingMulticastRendezvousPoint": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/routing/multicast/rendezvousPoints`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/routing/multicast/rendezvousPoints`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/routing/multicast/rendezvousPoints`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -917,8 +800,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchRoutingMulticastRendezvousPoint": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/routing/multicast/rendezvousPoints/{rendezvousPointId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/routing/multicast/rendezvousPoints/{rendezvousPointId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -927,13 +810,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSwitchRoutingMulticastRendezvousPoint": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/routing/multicast/rendezvousPoints/{rendezvousPointId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/routing/multicast/rendezvousPoints/{rendezvousPointId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/routing/multicast/rendezvousPoints/{rendezvousPointId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -943,13 +824,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchRoutingMulticastRendezvousPoint": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/routing/multicast/rendezvousPoints/{rendezvousPointId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/routing/multicast/rendezvousPoints/{rendezvousPointId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/routing/multicast/rendezvousPoints/{rendezvousPointId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -959,8 +838,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchRoutingOspf": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/routing/ospf`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/routing/ospf`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -969,13 +848,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchRoutingOspf": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/routing/ospf`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/routing/ospf`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/routing/ospf`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -985,8 +862,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchSettings": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/settings`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/settings`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -995,13 +872,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchSettings": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/settings`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/settings`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/settings`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1011,8 +886,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchStacks": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/stacks`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1021,13 +896,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkSwitchStack": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/stacks`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/stacks`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1037,8 +910,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchStack": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1047,13 +920,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSwitchStack": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1063,13 +934,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "addNetworkSwitchStack": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/add`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/add`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/add`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1079,13 +948,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchStackPortsMirror": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/ports/mirror`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/ports/mirror`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/ports/mirror`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1095,13 +962,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "removeNetworkSwitchStack": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/remove`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/remove`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/remove`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1111,8 +976,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchStackRoutingInterfaces": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/interfaces`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/routing/interfaces`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1121,13 +986,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkSwitchStackRoutingInterface": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/interfaces`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/routing/interfaces`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/interfaces`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1137,8 +1000,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchStackRoutingInterface": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1147,13 +1010,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchStackRoutingInterface": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1163,13 +1024,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSwitchStackRoutingInterface": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1179,8 +1038,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchStackRoutingInterfaceDhcp": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}/dhcp`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}/dhcp`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1189,13 +1048,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchStackRoutingInterfaceDhcp": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}/dhcp`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}/dhcp`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/interfaces/{interfaceId}/dhcp`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1205,8 +1062,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchStackRoutingStaticRoutes": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/staticRoutes`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/routing/staticRoutes`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1215,13 +1072,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkSwitchStackRoutingStaticRoute": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/staticRoutes`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/routing/staticRoutes`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/staticRoutes`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1231,8 +1086,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchStackRoutingStaticRoute": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/staticRoutes/{staticRouteId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/routing/staticRoutes/{staticRouteId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1241,13 +1096,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchStackRoutingStaticRoute": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/staticRoutes/{staticRouteId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/routing/staticRoutes/{staticRouteId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/staticRoutes/{staticRouteId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1257,13 +1110,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkSwitchStackRoutingStaticRoute": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/staticRoutes/{staticRouteId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stacks/{switchStackId}/routing/staticRoutes/{staticRouteId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/switch/stacks/{switchStackId}/routing/staticRoutes/{staticRouteId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1273,8 +1124,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchStormControl": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/stormControl`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stormControl`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1283,13 +1134,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchStormControl": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/stormControl`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stormControl`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/stormControl`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1299,8 +1148,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSwitchStp": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/switch/stp`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stp`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1309,13 +1158,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSwitchStp": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/stp`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/switch/stp`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/switch/stp`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1325,8 +1172,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationConfigTemplatesSwitchProfilesPortsMirrorsBySwitch": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/switch/profiles/ports/mirrors/bySwitchProfile`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/configTemplates/switch/profiles/ports/mirrors/bySwitchProfile`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1335,8 +1182,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationConfigTemplateSwitchProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/{configTemplateId}/switch/profiles`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/configTemplates/{configTemplateId}/switch/profiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1345,8 +1192,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationConfigTemplateSwitchProfilePorts": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/{configTemplateId}/switch/profiles/{profileId}/ports`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/configTemplates/{configTemplateId}/switch/profiles/{profileId}/ports`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1355,13 +1202,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationConfigTemplateSwitchProfilePortsMirror": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/{configTemplateId}/switch/profiles/{profileId}/ports/mirror`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/configTemplates/{configTemplateId}/switch/profiles/{profileId}/ports/mirror`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/{configTemplateId}/switch/profiles/{profileId}/ports/mirror`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1371,8 +1216,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationConfigTemplateSwitchProfilePort": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/{configTemplateId}/switch/profiles/{profileId}/ports/{portId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/configTemplates/{configTemplateId}/switch/profiles/{profileId}/ports/{portId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1381,13 +1226,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationConfigTemplateSwitchProfilePort": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/{configTemplateId}/switch/profiles/{profileId}/ports/{portId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/configTemplates/{configTemplateId}/switch/profiles/{profileId}/ports/{portId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/{configTemplateId}/switch/profiles/{profileId}/ports/{portId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1397,8 +1240,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSummarySwitchPowerHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/summary/switch/power/history`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/summary/switch/power/history`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1407,13 +1250,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "cloneOrganizationSwitchDevices": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/switch/devices/clone`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/devices/clone`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/switch/devices/clone`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1423,8 +1264,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchDevicesSystemQueuesHistoryBySwitchByInterva": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/devices/system/queues/history/bySwitch/byInterval`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/devices/system/queues/history/bySwitch/byInterval`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1433,8 +1274,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsBySwitch": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/bySwitch`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/bySwitch`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1443,8 +1284,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsClientsOverviewByDevice": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/clients/overview/byDevice`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/clients/overview/byDevice`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1453,8 +1294,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsMirrorsBySwitch": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/mirrors/bySwitch`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/mirrors/bySwitch`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1463,8 +1304,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsOverview": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/overview`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/overview`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1473,8 +1314,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1483,13 +1324,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSwitchPortsProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1499,8 +1338,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsProfilesAutomations": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/automations`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/automations`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1509,13 +1348,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSwitchPortsProfilesAutomation": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/automations`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/automations`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/automations`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1525,13 +1362,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSwitchPortsProfilesAutomation": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/automations/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/automations/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/automations/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1541,13 +1376,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSwitchPortsProfilesAutomation": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/automations/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/automations/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/automations/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1557,8 +1390,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsProfilesNetworksAssignments": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/networks/assignments`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/networks/assignments`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1567,13 +1400,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSwitchPortsProfilesNetworksAssignment": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/networks/assignments`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/networks/assignments`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/networks/assignments`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1583,13 +1414,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "batchOrganizationSwitchPortsProfilesNetworksAssignmentsCreate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/networks/assignments/batchCreate`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/networks/assignments/batchCreate`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/networks/assignments/batchCreate`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1599,13 +1428,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "bulkOrganizationSwitchPortsProfilesNetworksAssignmentsDelete": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/networks/assignments/bulkDelete`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/networks/assignments/bulkDelete`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/networks/assignments/bulkDelete`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1615,13 +1442,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSwitchPortsProfilesNetworksAssignment": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/networks/assignments/{assignmentId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/networks/assignments/{assignmentId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/networks/assignments/{assignmentId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1631,8 +1456,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsProfilesOverviewByProfile": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/overview/byProfile`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/overview/byProfile`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1641,8 +1466,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsProfile": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/{id}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1651,13 +1476,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSwitchPortsProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1667,13 +1490,11 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSwitchPortsProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/profiles/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/profiles/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1683,8 +1504,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsStatusesBySwitch": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/statuses/bySwitch`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/statuses/bySwitch`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1693,8 +1514,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsTopologyDiscoveryByDevice": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/topology/discovery/byDevice`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/topology/discovery/byDevice`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1703,8 +1524,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsTransceiversReadingsHistoryBySwitch": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/transceivers/readings/history/bySwitch`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/transceivers/readings/history/bySwitch`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1713,8 +1534,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchPortsUsageHistoryByDeviceByInterval": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/ports/usage/history/byDevice/byInterval`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/ports/usage/history/byDevice/byInterval`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1723,8 +1544,8 @@ export async function _switch(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSwitchStacksPortsMirrorsByStack": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/switch/stacks/ports/mirrors/byStack`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/switch/stacks/ports/mirrors/byStack`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1738,5 +1559,132 @@ export async function _switch(client: any, params: any): Promise<any> {
 }
 
 export const switchEndpoints = [
-  "getDeviceSwitchPorts","cycleDeviceSwitchPorts","updateDeviceSwitchPortsMirror","getDeviceSwitchPortsStatuses","getDeviceSwitchPortsStatusesPackets","getDeviceSwitchPort","updateDeviceSwitchPort","getDeviceSwitchRoutingInterfaces","createDeviceSwitchRoutingInterface","getDeviceSwitchRoutingInterface","updateDeviceSwitchRoutingInterface","deleteDeviceSwitchRoutingInterface","getDeviceSwitchRoutingInterfaceDhcp","updateDeviceSwitchRoutingInterfaceDhcp","getDeviceSwitchRoutingStaticRoutes","createDeviceSwitchRoutingStaticRoute","getDeviceSwitchRoutingStaticRoute","updateDeviceSwitchRoutingStaticRoute","deleteDeviceSwitchRoutingStaticRoute","getDeviceSwitchWarmSpare","updateDeviceSwitchWarmSpare","getNetworkSwitchAccessControlLists","updateNetworkSwitchAccessControlLists","getNetworkSwitchAccessPolicies","createNetworkSwitchAccessPolicy","getNetworkSwitchAccessPolicy","updateNetworkSwitchAccessPolicy","deleteNetworkSwitchAccessPolicy","getNetworkSwitchAlternateManagementInterface","updateNetworkSwitchAlternateManagementInterface","getNetworkSwitchDhcpV4ServersSeen","getNetworkSwitchDhcpServerPolicy","updateNetworkSwitchDhcpServerPolicy","getNetworkSwitchDhcpServerPolicyArpInspectionTrustedServers","createNetworkSwitchDhcpServerPolicyArpInspectionTrustedServer","updateNetworkSwitchDhcpServerPolicyArpInspectionTrustedServer","deleteNetworkSwitchDhcpServerPolicyArpInspectionTrustedServer","getNetworkSwitchDhcpServerPolicyArpInspectionWarningsByDevice","getNetworkSwitchDscpToCosMappings","updateNetworkSwitchDscpToCosMappings","getNetworkSwitchLinkAggregations","createNetworkSwitchLinkAggregation","updateNetworkSwitchLinkAggregation","deleteNetworkSwitchLinkAggregation","getNetworkSwitchMtu","updateNetworkSwitchMtu","getNetworkSwitchPortSchedules","createNetworkSwitchPortSchedule","deleteNetworkSwitchPortSchedule","updateNetworkSwitchPortSchedule","getNetworkSwitchPortsProfiles","createNetworkSwitchPortsProfile","updateNetworkSwitchPortsProfile","deleteNetworkSwitchPortsProfile","getNetworkSwitchQosRules","createNetworkSwitchQosRule","getNetworkSwitchQosRulesOrder","updateNetworkSwitchQosRulesOrder","getNetworkSwitchQosRule","deleteNetworkSwitchQosRule","updateNetworkSwitchQosRule","getNetworkSwitchRoutingMulticast","updateNetworkSwitchRoutingMulticast","getNetworkSwitchRoutingMulticastRendezvousPoints","createNetworkSwitchRoutingMulticastRendezvousPoint","getNetworkSwitchRoutingMulticastRendezvousPoint","deleteNetworkSwitchRoutingMulticastRendezvousPoint","updateNetworkSwitchRoutingMulticastRendezvousPoint","getNetworkSwitchRoutingOspf","updateNetworkSwitchRoutingOspf","getNetworkSwitchSettings","updateNetworkSwitchSettings","getNetworkSwitchStacks","createNetworkSwitchStack","getNetworkSwitchStack","deleteNetworkSwitchStack","addNetworkSwitchStack","updateNetworkSwitchStackPortsMirror","removeNetworkSwitchStack","getNetworkSwitchStackRoutingInterfaces","createNetworkSwitchStackRoutingInterface","getNetworkSwitchStackRoutingInterface","updateNetworkSwitchStackRoutingInterface","deleteNetworkSwitchStackRoutingInterface","getNetworkSwitchStackRoutingInterfaceDhcp","updateNetworkSwitchStackRoutingInterfaceDhcp","getNetworkSwitchStackRoutingStaticRoutes","createNetworkSwitchStackRoutingStaticRoute","getNetworkSwitchStackRoutingStaticRoute","updateNetworkSwitchStackRoutingStaticRoute","deleteNetworkSwitchStackRoutingStaticRoute","getNetworkSwitchStormControl","updateNetworkSwitchStormControl","getNetworkSwitchStp","updateNetworkSwitchStp","getOrganizationConfigTemplatesSwitchProfilesPortsMirrorsBySwitch","getOrganizationConfigTemplateSwitchProfiles","getOrganizationConfigTemplateSwitchProfilePorts","updateOrganizationConfigTemplateSwitchProfilePortsMirror","getOrganizationConfigTemplateSwitchProfilePort","updateOrganizationConfigTemplateSwitchProfilePort","getOrganizationSummarySwitchPowerHistory","cloneOrganizationSwitchDevices","getOrganizationSwitchDevicesSystemQueuesHistoryBySwitchByInterva","getOrganizationSwitchPortsBySwitch","getOrganizationSwitchPortsClientsOverviewByDevice","getOrganizationSwitchPortsMirrorsBySwitch","getOrganizationSwitchPortsOverview","getOrganizationSwitchPortsProfiles","createOrganizationSwitchPortsProfile","getOrganizationSwitchPortsProfilesAutomations","createOrganizationSwitchPortsProfilesAutomation","updateOrganizationSwitchPortsProfilesAutomation","deleteOrganizationSwitchPortsProfilesAutomation","getOrganizationSwitchPortsProfilesNetworksAssignments","createOrganizationSwitchPortsProfilesNetworksAssignment","batchOrganizationSwitchPortsProfilesNetworksAssignmentsCreate","bulkOrganizationSwitchPortsProfilesNetworksAssignmentsDelete","deleteOrganizationSwitchPortsProfilesNetworksAssignment","getOrganizationSwitchPortsProfilesOverviewByProfile","getOrganizationSwitchPortsProfile","updateOrganizationSwitchPortsProfile","deleteOrganizationSwitchPortsProfile","getOrganizationSwitchPortsStatusesBySwitch","getOrganizationSwitchPortsTopologyDiscoveryByDevice","getOrganizationSwitchPortsTransceiversReadingsHistoryBySwitch","getOrganizationSwitchPortsUsageHistoryByDeviceByInterval","getOrganizationSwitchStacksPortsMirrorsByStack"
+  "getDeviceSwitchPorts",
+  "cycleDeviceSwitchPorts",
+  "updateDeviceSwitchPortsMirror",
+  "getDeviceSwitchPortsStatuses",
+  "getDeviceSwitchPortsStatusesPackets",
+  "getDeviceSwitchPort",
+  "updateDeviceSwitchPort",
+  "getDeviceSwitchRoutingInterfaces",
+  "createDeviceSwitchRoutingInterface",
+  "getDeviceSwitchRoutingInterface",
+  "updateDeviceSwitchRoutingInterface",
+  "deleteDeviceSwitchRoutingInterface",
+  "getDeviceSwitchRoutingInterfaceDhcp",
+  "updateDeviceSwitchRoutingInterfaceDhcp",
+  "getDeviceSwitchRoutingStaticRoutes",
+  "createDeviceSwitchRoutingStaticRoute",
+  "getDeviceSwitchRoutingStaticRoute",
+  "updateDeviceSwitchRoutingStaticRoute",
+  "deleteDeviceSwitchRoutingStaticRoute",
+  "getDeviceSwitchWarmSpare",
+  "updateDeviceSwitchWarmSpare",
+  "getNetworkSwitchAccessControlLists",
+  "updateNetworkSwitchAccessControlLists",
+  "getNetworkSwitchAccessPolicies",
+  "createNetworkSwitchAccessPolicy",
+  "getNetworkSwitchAccessPolicy",
+  "updateNetworkSwitchAccessPolicy",
+  "deleteNetworkSwitchAccessPolicy",
+  "getNetworkSwitchAlternateManagementInterface",
+  "updateNetworkSwitchAlternateManagementInterface",
+  "getNetworkSwitchDhcpV4ServersSeen",
+  "getNetworkSwitchDhcpServerPolicy",
+  "updateNetworkSwitchDhcpServerPolicy",
+  "getNetworkSwitchDhcpServerPolicyArpInspectionTrustedServers",
+  "createNetworkSwitchDhcpServerPolicyArpInspectionTrustedServer",
+  "updateNetworkSwitchDhcpServerPolicyArpInspectionTrustedServer",
+  "deleteNetworkSwitchDhcpServerPolicyArpInspectionTrustedServer",
+  "getNetworkSwitchDhcpServerPolicyArpInspectionWarningsByDevice",
+  "getNetworkSwitchDscpToCosMappings",
+  "updateNetworkSwitchDscpToCosMappings",
+  "getNetworkSwitchLinkAggregations",
+  "createNetworkSwitchLinkAggregation",
+  "updateNetworkSwitchLinkAggregation",
+  "deleteNetworkSwitchLinkAggregation",
+  "getNetworkSwitchMtu",
+  "updateNetworkSwitchMtu",
+  "getNetworkSwitchPortSchedules",
+  "createNetworkSwitchPortSchedule",
+  "deleteNetworkSwitchPortSchedule",
+  "updateNetworkSwitchPortSchedule",
+  "getNetworkSwitchPortsProfiles",
+  "createNetworkSwitchPortsProfile",
+  "updateNetworkSwitchPortsProfile",
+  "deleteNetworkSwitchPortsProfile",
+  "getNetworkSwitchQosRules",
+  "createNetworkSwitchQosRule",
+  "getNetworkSwitchQosRulesOrder",
+  "updateNetworkSwitchQosRulesOrder",
+  "getNetworkSwitchQosRule",
+  "deleteNetworkSwitchQosRule",
+  "updateNetworkSwitchQosRule",
+  "getNetworkSwitchRoutingMulticast",
+  "updateNetworkSwitchRoutingMulticast",
+  "getNetworkSwitchRoutingMulticastRendezvousPoints",
+  "createNetworkSwitchRoutingMulticastRendezvousPoint",
+  "getNetworkSwitchRoutingMulticastRendezvousPoint",
+  "deleteNetworkSwitchRoutingMulticastRendezvousPoint",
+  "updateNetworkSwitchRoutingMulticastRendezvousPoint",
+  "getNetworkSwitchRoutingOspf",
+  "updateNetworkSwitchRoutingOspf",
+  "getNetworkSwitchSettings",
+  "updateNetworkSwitchSettings",
+  "getNetworkSwitchStacks",
+  "createNetworkSwitchStack",
+  "getNetworkSwitchStack",
+  "deleteNetworkSwitchStack",
+  "addNetworkSwitchStack",
+  "updateNetworkSwitchStackPortsMirror",
+  "removeNetworkSwitchStack",
+  "getNetworkSwitchStackRoutingInterfaces",
+  "createNetworkSwitchStackRoutingInterface",
+  "getNetworkSwitchStackRoutingInterface",
+  "updateNetworkSwitchStackRoutingInterface",
+  "deleteNetworkSwitchStackRoutingInterface",
+  "getNetworkSwitchStackRoutingInterfaceDhcp",
+  "updateNetworkSwitchStackRoutingInterfaceDhcp",
+  "getNetworkSwitchStackRoutingStaticRoutes",
+  "createNetworkSwitchStackRoutingStaticRoute",
+  "getNetworkSwitchStackRoutingStaticRoute",
+  "updateNetworkSwitchStackRoutingStaticRoute",
+  "deleteNetworkSwitchStackRoutingStaticRoute",
+  "getNetworkSwitchStormControl",
+  "updateNetworkSwitchStormControl",
+  "getNetworkSwitchStp",
+  "updateNetworkSwitchStp",
+  "getOrganizationConfigTemplatesSwitchProfilesPortsMirrorsBySwitch",
+  "getOrganizationConfigTemplateSwitchProfiles",
+  "getOrganizationConfigTemplateSwitchProfilePorts",
+  "updateOrganizationConfigTemplateSwitchProfilePortsMirror",
+  "getOrganizationConfigTemplateSwitchProfilePort",
+  "updateOrganizationConfigTemplateSwitchProfilePort",
+  "getOrganizationSummarySwitchPowerHistory",
+  "cloneOrganizationSwitchDevices",
+  "getOrganizationSwitchDevicesSystemQueuesHistoryBySwitchByInterva",
+  "getOrganizationSwitchPortsBySwitch",
+  "getOrganizationSwitchPortsClientsOverviewByDevice",
+  "getOrganizationSwitchPortsMirrorsBySwitch",
+  "getOrganizationSwitchPortsOverview",
+  "getOrganizationSwitchPortsProfiles",
+  "createOrganizationSwitchPortsProfile",
+  "getOrganizationSwitchPortsProfilesAutomations",
+  "createOrganizationSwitchPortsProfilesAutomation",
+  "updateOrganizationSwitchPortsProfilesAutomation",
+  "deleteOrganizationSwitchPortsProfilesAutomation",
+  "getOrganizationSwitchPortsProfilesNetworksAssignments",
+  "createOrganizationSwitchPortsProfilesNetworksAssignment",
+  "batchOrganizationSwitchPortsProfilesNetworksAssignmentsCreate",
+  "bulkOrganizationSwitchPortsProfilesNetworksAssignmentsDelete",
+  "deleteOrganizationSwitchPortsProfilesNetworksAssignment",
+  "getOrganizationSwitchPortsProfilesOverviewByProfile",
+  "getOrganizationSwitchPortsProfile",
+  "updateOrganizationSwitchPortsProfile",
+  "deleteOrganizationSwitchPortsProfile",
+  "getOrganizationSwitchPortsStatusesBySwitch",
+  "getOrganizationSwitchPortsTopologyDiscoveryByDevice",
+  "getOrganizationSwitchPortsTransceiversReadingsHistoryBySwitch",
+  "getOrganizationSwitchPortsUsageHistoryByDeviceByInterval",
+  "getOrganizationSwitchStacksPortsMirrorsByStack"
 ];

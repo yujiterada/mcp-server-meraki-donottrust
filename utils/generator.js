@@ -6,9 +6,10 @@ import path from 'path';
 import ejs from 'ejs';
 import { fileURLToPath } from 'url';
 
+const FILENAME = "api.json";
+const PATH = "../src/meraki";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const PATH = "../src/meraki";
 
 const SCOPES = [
   "organizations",
@@ -39,7 +40,7 @@ try {
   const apiTemplate = fs.readFileSync(apiTemplatePath, 'utf8');
 
   // Read the API specification JSON
-  const apiSpecPath = path.join(__dirname, 'api.json');
+  const apiSpecPath = path.join(__dirname, FILENAME);
   const apiSpec = JSON.parse(fs.readFileSync(apiSpecPath, 'utf8'));
 
   // Create directories for the output if they don't exist
@@ -68,37 +69,43 @@ try {
       if (methodData.tags && methodData.tags.length > 0 && SCOPES.includes(methodData.tags[0])) {
         const scope = methodData.tags[0];
 
-        // Initialize the array for this scope if it doesn't exist
+        // Initialize the object for this scope if it doesn't exist
         if (!scopeOperations[scope]) {
-          scopeOperations[scope] = [];
-          pathTree[scope] = [];
+          scopeOperations[scope] = {};
+        }
+
+        if (!pathTree[scope]) {
+          pathTree[scope] = {};
         }
 
         // Handle parameters
-        const parameters = [];
+        const parameters = {};
         const required = [];
         if (methodData.parameters) {
           methodData.parameters.forEach(param => {
+
+            // i.e. body
+            if (!parameters[param.in]) {
+              parameters[param.in] = {};
+            }
             if (param.schema) {
               Object.keys(param.schema.properties).forEach(property => {
-                parameters.push({
-                  name: `${param.in}-${property}`,
+                parameters[param.in][property] = {
                   type: param.schema.properties[property].type,
                   description: param.schema.properties[property].description
-                });
+                };
               });
               if (param.schema.required) {
-                param.schema.required.forEach(req => required.push(`"${param.in}-${req}"`))
+                param.schema.required.forEach(req => required.push(`"${param.in}.${req}"`))
               }
             } else {
               if (param.required) {
-                required.push(`"${param.in}-${param.name}"`)
+                required.push(`"${param.in}.${param.name}"`)
               }
-              parameters.push({
-                name: `${param.in}-${param.name}`,
+              parameters[param.in][param.name] = {
                 type: param.type,
                 description: param.description
-              });
+              };
             }
           });
         }
@@ -108,22 +115,25 @@ try {
         }
 
         // Add this operation to the scope's array
-        scopeOperations[scope].push({
+        scopeOperations[scope][methodData.operationId] = {
           operationId: methodData.operationId,
           name: methodData.operationId.length > 64 ? methodData.operationId.slice(0, 64) : methodData.operationId,
           description: methodData.description || methodData.summary || '',
           method: method.toUpperCase(),
-          path: pathUrl.replace('{', '${params.arguments["path-').replace('}', '"]}'),
+          path: pathUrl.replace('{', '${params.arguments.path.').replace('}', '}'),
           parameters: parameters,
           required: required
-        });
-        pathTree[scope].push(methodData.operationId);
+        };
+        pathTree[scope][methodData.operationId] = scopeOperations;
       }
     }
   }
 
   // Generate a file for each scope
   for (const [scope, operations] of Object.entries(scopeOperations)) {
+    console.log(scope)
+    // console.log(operations)
+    // console.log(pathTree)
     const baseFilename = scope;
 
     // Generate Tools file

@@ -1,52 +1,9 @@
-function hasBodyPrefixedKeys(obj: any) {
-  // Check if obj is null or not an object
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-  // Get all keys of the object
-  const keys = Object.keys(obj);
-  // Check if any key starts with "body-"
-  return keys.some(key => key.startsWith('body-'));
-}
-
-function transformRequestBody(obj: any) {
-  const transformedObject: any = {};
-  // Loop through all keys in the original object
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "body-"
-    if (key.startsWith('body-')) {
-      // Create a new key without the "body-" prefix
-      const newKey = key.substring(5); // Remove first 5 characters ("body-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    } else {
-      // If the key doesn't start with "body-", keep it as is
-      transformedObject[key] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
-function transformQueryParams(obj: any) {
-  const transformedObject: any = {};
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "query-"
-    if (key.startsWith('query-')) {
-      // Create a new key without the "query-" prefix
-      const newKey = key.substring(6); // Remove first 6 characters ("query-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
 export async function _networks(client: any, params: any): Promise<any> {
   let response = {data: ''};
   switch (params.name) {
     case "getNetwork": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -55,13 +12,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetwork": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -71,13 +26,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetwork": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -87,8 +40,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkAlertsHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/alerts/history`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/alerts/history`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -97,8 +50,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkAlertsSettings": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/alerts/settings`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/alerts/settings`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -107,13 +60,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkAlertsSettings": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/alerts/settings`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/alerts/settings`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/alerts/settings`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -123,13 +74,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "bindNetwork": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/bind`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/bind`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/bind`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -139,8 +88,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkBluetoothClients": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/bluetoothClients`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/bluetoothClients`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -149,8 +98,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkBluetoothClient": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/bluetoothClients/{bluetoothClientId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/bluetoothClients/{bluetoothClientId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -159,8 +108,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkClients": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/clients`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/clients`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -169,8 +118,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkClientsApplicationUsage": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/clients/applicationUsage`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/clients/applicationUsage`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -179,8 +128,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkClientsBandwidthUsageHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/clients/bandwidthUsageHistory`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/clients/bandwidthUsageHistory`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -189,8 +138,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkClientsOverview": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/clients/overview`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/clients/overview`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -199,13 +148,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "provisionNetworkClients": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/clients/provision`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/clients/provision`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/clients/provision`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -215,8 +162,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkClientsUsageHistories": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/clients/usageHistories`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/clients/usageHistories`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -225,8 +172,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkClient": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/clients/{clientId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/clients/{clientId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -235,8 +182,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkClientPolicy": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/clients/{clientId}/policy`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/clients/{clientId}/policy`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -245,13 +192,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkClientPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/clients/{clientId}/policy`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/clients/{clientId}/policy`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/clients/{clientId}/policy`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -261,8 +206,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkClientSplashAuthorizationStatus": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/clients/{clientId}/splashAuthorizationStatus`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/clients/{clientId}/splashAuthorizationStatus`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -271,13 +216,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkClientSplashAuthorizationStatus": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/clients/{clientId}/splashAuthorizationStatus`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/clients/{clientId}/splashAuthorizationStatus`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/clients/{clientId}/splashAuthorizationStatus`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -287,8 +230,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkClientTrafficHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/clients/{clientId}/trafficHistory`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/clients/{clientId}/trafficHistory`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -297,8 +240,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkClientUsageHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/clients/{clientId}/usageHistory`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/clients/{clientId}/usageHistory`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -307,8 +250,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkDevices": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/devices`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/devices`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -317,13 +260,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "claimNetworkDevices": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/devices/claim`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/devices/claim`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/devices/claim`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -333,13 +274,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "vmxNetworkDevicesClaim": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/devices/claim/vmx`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/devices/claim/vmx`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/devices/claim/vmx`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -349,13 +288,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "removeNetworkDevices": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/devices/remove`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/devices/remove`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/devices/remove`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -365,8 +302,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkEvents": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/events`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/events`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -375,8 +312,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkEventsEventTypes": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/events/eventTypes`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/events/eventTypes`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -385,8 +322,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkFirmwareUpgrades": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -395,13 +332,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkFirmwareUpgrades": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -411,13 +346,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkFirmwareUpgradesRollback": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/rollbacks`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/rollbacks`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/rollbacks`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -427,8 +360,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkFirmwareUpgradesStagedEvents": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/events`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/staged/events`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -437,13 +370,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkFirmwareUpgradesStagedEvent": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/events`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/staged/events`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/events`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -453,13 +384,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkFirmwareUpgradesStagedEvents": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/events`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/staged/events`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/events`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -469,13 +398,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "deferNetworkFirmwareUpgradesStagedEvents": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/events/defer`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/staged/events/defer`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/events/defer`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -485,13 +412,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "rollbacksNetworkFirmwareUpgradesStagedEvents": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/events/rollbacks`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/staged/events/rollbacks`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/events/rollbacks`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -501,8 +426,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkFirmwareUpgradesStagedGroups": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/groups`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/staged/groups`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -511,13 +436,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkFirmwareUpgradesStagedGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/groups`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/staged/groups`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/groups`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -527,8 +450,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkFirmwareUpgradesStagedGroup": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/groups/{groupId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/staged/groups/{groupId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -537,13 +460,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkFirmwareUpgradesStagedGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/groups/{groupId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/staged/groups/{groupId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/groups/{groupId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -553,13 +474,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkFirmwareUpgradesStagedGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/groups/{groupId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/staged/groups/{groupId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/groups/{groupId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -569,8 +488,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkFirmwareUpgradesStagedStages": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/stages`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/staged/stages`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -579,13 +498,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkFirmwareUpgradesStagedStages": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/stages`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/firmwareUpgrades/staged/stages`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/firmwareUpgrades/staged/stages`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -595,8 +512,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkFloorPlans": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/floorPlans`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/floorPlans`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -605,13 +522,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkFloorPlan": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/floorPlans`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/floorPlans`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/floorPlans`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -621,13 +536,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "batchNetworkFloorPlansAutoLocateJobs": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/floorPlans/autoLocate/jobs/batch`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/floorPlans/autoLocate/jobs/batch`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/floorPlans/autoLocate/jobs/batch`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -637,13 +550,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "cancelNetworkFloorPlansAutoLocateJob": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/floorPlans/autoLocate/jobs/{jobId}/cancel`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/floorPlans/autoLocate/jobs/{jobId}/cancel`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/floorPlans/autoLocate/jobs/{jobId}/cancel`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -653,13 +564,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "publishNetworkFloorPlansAutoLocateJob": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/floorPlans/autoLocate/jobs/{jobId}/publish`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/floorPlans/autoLocate/jobs/{jobId}/publish`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/floorPlans/autoLocate/jobs/{jobId}/publish`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -669,13 +578,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "recalculateNetworkFloorPlansAutoLocateJob": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/floorPlans/autoLocate/jobs/{jobId}/recalculate`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/floorPlans/autoLocate/jobs/{jobId}/recalculate`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/floorPlans/autoLocate/jobs/{jobId}/recalculate`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -685,13 +592,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "batchNetworkFloorPlansDevicesUpdate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/floorPlans/devices/batchUpdate`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/floorPlans/devices/batchUpdate`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/floorPlans/devices/batchUpdate`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -701,8 +606,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkFloorPlan": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/floorPlans/{floorPlanId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/floorPlans/{floorPlanId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -711,13 +616,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkFloorPlan": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/floorPlans/{floorPlanId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/floorPlans/{floorPlanId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/floorPlans/{floorPlanId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -727,13 +630,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkFloorPlan": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/floorPlans/{floorPlanId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/floorPlans/{floorPlanId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/floorPlans/{floorPlanId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -743,8 +644,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkGroupPolicies": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/groupPolicies`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/groupPolicies`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -753,13 +654,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkGroupPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/groupPolicies`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/groupPolicies`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/groupPolicies`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -769,8 +668,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkGroupPolicy": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/groupPolicies/{groupPolicyId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/groupPolicies/{groupPolicyId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -779,13 +678,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkGroupPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/groupPolicies/{groupPolicyId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/groupPolicies/{groupPolicyId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/groupPolicies/{groupPolicyId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -795,13 +692,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkGroupPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/groupPolicies/{groupPolicyId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/groupPolicies/{groupPolicyId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/groupPolicies/{groupPolicyId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -811,8 +706,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkHealthAlerts": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/health/alerts`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/health/alerts`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -821,8 +716,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkLocationScanning": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/locationScanning`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/locationScanning`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -831,13 +726,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkLocationScanning": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/locationScanning`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/locationScanning`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/locationScanning`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -847,8 +740,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkLocationScanningHttpServers": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/locationScanning/httpServers`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/locationScanning/httpServers`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -857,13 +750,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkLocationScanningHttpServers": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/locationScanning/httpServers`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/locationScanning/httpServers`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/locationScanning/httpServers`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -873,8 +764,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkMerakiAuthUsers": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/merakiAuthUsers`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/merakiAuthUsers`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -883,13 +774,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkMerakiAuthUser": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/merakiAuthUsers`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/merakiAuthUsers`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/merakiAuthUsers`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -899,8 +788,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkMerakiAuthUser": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/merakiAuthUsers/{merakiAuthUserId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/merakiAuthUsers/{merakiAuthUserId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -909,13 +798,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkMerakiAuthUser": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/merakiAuthUsers/{merakiAuthUserId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/merakiAuthUsers/{merakiAuthUserId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/merakiAuthUsers/{merakiAuthUserId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -925,13 +812,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkMerakiAuthUser": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/merakiAuthUsers/{merakiAuthUserId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/merakiAuthUsers/{merakiAuthUserId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/merakiAuthUsers/{merakiAuthUserId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -941,8 +826,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkMqttBrokers": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/mqttBrokers`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/mqttBrokers`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -951,13 +836,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkMqttBroker": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/mqttBrokers`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/mqttBrokers`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/mqttBrokers`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -967,8 +850,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkMqttBroker": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/mqttBrokers/{mqttBrokerId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/mqttBrokers/{mqttBrokerId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -977,13 +860,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkMqttBroker": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/mqttBrokers/{mqttBrokerId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/mqttBrokers/{mqttBrokerId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/mqttBrokers/{mqttBrokerId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -993,13 +874,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkMqttBroker": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/mqttBrokers/{mqttBrokerId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/mqttBrokers/{mqttBrokerId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/mqttBrokers/{mqttBrokerId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1009,8 +888,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkNetflow": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/netflow`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/netflow`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1019,13 +898,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkNetflow": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/netflow`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/netflow`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/netflow`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1035,8 +912,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkNetworkHealthChannelUtilization": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/networkHealth/channelUtilization`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/networkHealth/channelUtilization`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1045,8 +922,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkPiiPiiKeys": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/pii/piiKeys`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/pii/piiKeys`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1055,8 +932,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkPiiRequests": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/pii/requests`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/pii/requests`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1065,13 +942,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkPiiRequest": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/pii/requests`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/pii/requests`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/pii/requests`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1081,8 +956,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkPiiRequest": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/pii/requests/{requestId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/pii/requests/{requestId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1091,13 +966,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkPiiRequest": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/pii/requests/{requestId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/pii/requests/{requestId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/pii/requests/{requestId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1107,8 +980,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkPiiSmDevicesForKey": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/pii/smDevicesForKey`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/pii/smDevicesForKey`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1117,8 +990,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkPiiSmOwnersForKey": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/pii/smOwnersForKey`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/pii/smOwnersForKey`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1127,8 +1000,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkPoliciesByClient": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/policies/byClient`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/policies/byClient`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1137,8 +1010,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSettings": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/settings`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/settings`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1147,13 +1020,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSettings": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/settings`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/settings`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/settings`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1163,8 +1034,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSnmp": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/snmp`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/snmp`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1173,13 +1044,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSnmp": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/snmp`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/snmp`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/snmp`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1189,13 +1058,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSnmpTraps": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/snmp/traps`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/snmp/traps`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/snmp/traps`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1205,8 +1072,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSplashLoginAttempts": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/splashLoginAttempts`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/splashLoginAttempts`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1215,13 +1082,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "splitNetwork": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/split`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/split`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/split`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1231,8 +1096,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkSyslogServers": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/syslogServers`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/syslogServers`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1241,13 +1106,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkSyslogServers": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/syslogServers`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/syslogServers`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/syslogServers`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1257,8 +1120,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkTopologyLinkLayer": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/topology/linkLayer`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/topology/linkLayer`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1267,8 +1130,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkTraffic": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/traffic`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/traffic`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1277,8 +1140,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkTrafficAnalysis": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/trafficAnalysis`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/trafficAnalysis`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1287,13 +1150,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkTrafficAnalysis": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/trafficAnalysis`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/trafficAnalysis`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/trafficAnalysis`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1303,8 +1164,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkTrafficShapingApplicationCategories": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/trafficShaping/applicationCategories`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/trafficShaping/applicationCategories`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1313,8 +1174,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkTrafficShapingDscpTaggingOptions": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/trafficShaping/dscpTaggingOptions`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/trafficShaping/dscpTaggingOptions`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1323,13 +1184,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "unbindNetwork": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/unbind`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/unbind`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/unbind`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1339,8 +1198,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkVlanProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/vlanProfiles`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/vlanProfiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1349,13 +1208,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkVlanProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/vlanProfiles`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/vlanProfiles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/vlanProfiles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1365,8 +1222,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkVlanProfilesAssignmentsByDevice": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/vlanProfiles/assignments/byDevice`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/vlanProfiles/assignments/byDevice`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1375,13 +1232,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "reassignNetworkVlanProfilesAssignments": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/vlanProfiles/assignments/reassign`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/vlanProfiles/assignments/reassign`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/vlanProfiles/assignments/reassign`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1391,8 +1246,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkVlanProfile": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/vlanProfiles/{iname}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/vlanProfiles/{iname}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1401,13 +1256,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkVlanProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/vlanProfiles/{iname}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/vlanProfiles/{iname}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/vlanProfiles/{iname}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1417,13 +1270,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkVlanProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/vlanProfiles/{iname}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/vlanProfiles/{iname}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/vlanProfiles/{iname}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1433,8 +1284,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkWebhooksHttpServers": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/webhooks/httpServers`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/webhooks/httpServers`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1443,13 +1294,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkWebhooksHttpServer": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/webhooks/httpServers`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/webhooks/httpServers`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/webhooks/httpServers`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1459,8 +1308,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkWebhooksHttpServer": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/webhooks/httpServers/{httpServerId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/webhooks/httpServers/{httpServerId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1469,13 +1318,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkWebhooksHttpServer": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/webhooks/httpServers/{httpServerId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/webhooks/httpServers/{httpServerId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/webhooks/httpServers/{httpServerId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1485,13 +1332,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkWebhooksHttpServer": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/webhooks/httpServers/{httpServerId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/webhooks/httpServers/{httpServerId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/webhooks/httpServers/{httpServerId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1501,8 +1346,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkWebhooksPayloadTemplates": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/webhooks/payloadTemplates`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/webhooks/payloadTemplates`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1511,13 +1356,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkWebhooksPayloadTemplate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/webhooks/payloadTemplates`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/webhooks/payloadTemplates`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/webhooks/payloadTemplates`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1527,8 +1370,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkWebhooksPayloadTemplate": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/webhooks/payloadTemplates/{payloadTemplateId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/webhooks/payloadTemplates/{payloadTemplateId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1537,13 +1380,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "deleteNetworkWebhooksPayloadTemplate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/webhooks/payloadTemplates/{payloadTemplateId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/webhooks/payloadTemplates/{payloadTemplateId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/networks/${params.arguments["path-networkId"]}/webhooks/payloadTemplates/{payloadTemplateId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1553,13 +1394,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkWebhooksPayloadTemplate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/webhooks/payloadTemplates/{payloadTemplateId}`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/webhooks/payloadTemplates/{payloadTemplateId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/webhooks/payloadTemplates/{payloadTemplateId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1569,13 +1408,11 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkWebhooksWebhookTest": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/webhooks/webhookTests`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/webhooks/webhookTests`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/networks/${params.arguments["path-networkId"]}/webhooks/webhookTests`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1585,8 +1422,8 @@ export async function _networks(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkWebhooksWebhookTest": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/webhooks/webhookTests/{webhookTestId}`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/webhooks/webhookTests/{webhookTestId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1600,5 +1437,123 @@ export async function _networks(client: any, params: any): Promise<any> {
 }
 
 export const networksEndpoints = [
-  "getNetwork","updateNetwork","deleteNetwork","getNetworkAlertsHistory","getNetworkAlertsSettings","updateNetworkAlertsSettings","bindNetwork","getNetworkBluetoothClients","getNetworkBluetoothClient","getNetworkClients","getNetworkClientsApplicationUsage","getNetworkClientsBandwidthUsageHistory","getNetworkClientsOverview","provisionNetworkClients","getNetworkClientsUsageHistories","getNetworkClient","getNetworkClientPolicy","updateNetworkClientPolicy","getNetworkClientSplashAuthorizationStatus","updateNetworkClientSplashAuthorizationStatus","getNetworkClientTrafficHistory","getNetworkClientUsageHistory","getNetworkDevices","claimNetworkDevices","vmxNetworkDevicesClaim","removeNetworkDevices","getNetworkEvents","getNetworkEventsEventTypes","getNetworkFirmwareUpgrades","updateNetworkFirmwareUpgrades","createNetworkFirmwareUpgradesRollback","getNetworkFirmwareUpgradesStagedEvents","createNetworkFirmwareUpgradesStagedEvent","updateNetworkFirmwareUpgradesStagedEvents","deferNetworkFirmwareUpgradesStagedEvents","rollbacksNetworkFirmwareUpgradesStagedEvents","getNetworkFirmwareUpgradesStagedGroups","createNetworkFirmwareUpgradesStagedGroup","getNetworkFirmwareUpgradesStagedGroup","updateNetworkFirmwareUpgradesStagedGroup","deleteNetworkFirmwareUpgradesStagedGroup","getNetworkFirmwareUpgradesStagedStages","updateNetworkFirmwareUpgradesStagedStages","getNetworkFloorPlans","createNetworkFloorPlan","batchNetworkFloorPlansAutoLocateJobs","cancelNetworkFloorPlansAutoLocateJob","publishNetworkFloorPlansAutoLocateJob","recalculateNetworkFloorPlansAutoLocateJob","batchNetworkFloorPlansDevicesUpdate","getNetworkFloorPlan","updateNetworkFloorPlan","deleteNetworkFloorPlan","getNetworkGroupPolicies","createNetworkGroupPolicy","getNetworkGroupPolicy","updateNetworkGroupPolicy","deleteNetworkGroupPolicy","getNetworkHealthAlerts","getNetworkLocationScanning","updateNetworkLocationScanning","getNetworkLocationScanningHttpServers","updateNetworkLocationScanningHttpServers","getNetworkMerakiAuthUsers","createNetworkMerakiAuthUser","getNetworkMerakiAuthUser","deleteNetworkMerakiAuthUser","updateNetworkMerakiAuthUser","getNetworkMqttBrokers","createNetworkMqttBroker","getNetworkMqttBroker","updateNetworkMqttBroker","deleteNetworkMqttBroker","getNetworkNetflow","updateNetworkNetflow","getNetworkNetworkHealthChannelUtilization","getNetworkPiiPiiKeys","getNetworkPiiRequests","createNetworkPiiRequest","getNetworkPiiRequest","deleteNetworkPiiRequest","getNetworkPiiSmDevicesForKey","getNetworkPiiSmOwnersForKey","getNetworkPoliciesByClient","getNetworkSettings","updateNetworkSettings","getNetworkSnmp","updateNetworkSnmp","updateNetworkSnmpTraps","getNetworkSplashLoginAttempts","splitNetwork","getNetworkSyslogServers","updateNetworkSyslogServers","getNetworkTopologyLinkLayer","getNetworkTraffic","getNetworkTrafficAnalysis","updateNetworkTrafficAnalysis","getNetworkTrafficShapingApplicationCategories","getNetworkTrafficShapingDscpTaggingOptions","unbindNetwork","getNetworkVlanProfiles","createNetworkVlanProfile","getNetworkVlanProfilesAssignmentsByDevice","reassignNetworkVlanProfilesAssignments","getNetworkVlanProfile","updateNetworkVlanProfile","deleteNetworkVlanProfile","getNetworkWebhooksHttpServers","createNetworkWebhooksHttpServer","getNetworkWebhooksHttpServer","updateNetworkWebhooksHttpServer","deleteNetworkWebhooksHttpServer","getNetworkWebhooksPayloadTemplates","createNetworkWebhooksPayloadTemplate","getNetworkWebhooksPayloadTemplate","deleteNetworkWebhooksPayloadTemplate","updateNetworkWebhooksPayloadTemplate","createNetworkWebhooksWebhookTest","getNetworkWebhooksWebhookTest"
+  "getNetwork",
+  "updateNetwork",
+  "deleteNetwork",
+  "getNetworkAlertsHistory",
+  "getNetworkAlertsSettings",
+  "updateNetworkAlertsSettings",
+  "bindNetwork",
+  "getNetworkBluetoothClients",
+  "getNetworkBluetoothClient",
+  "getNetworkClients",
+  "getNetworkClientsApplicationUsage",
+  "getNetworkClientsBandwidthUsageHistory",
+  "getNetworkClientsOverview",
+  "provisionNetworkClients",
+  "getNetworkClientsUsageHistories",
+  "getNetworkClient",
+  "getNetworkClientPolicy",
+  "updateNetworkClientPolicy",
+  "getNetworkClientSplashAuthorizationStatus",
+  "updateNetworkClientSplashAuthorizationStatus",
+  "getNetworkClientTrafficHistory",
+  "getNetworkClientUsageHistory",
+  "getNetworkDevices",
+  "claimNetworkDevices",
+  "vmxNetworkDevicesClaim",
+  "removeNetworkDevices",
+  "getNetworkEvents",
+  "getNetworkEventsEventTypes",
+  "getNetworkFirmwareUpgrades",
+  "updateNetworkFirmwareUpgrades",
+  "createNetworkFirmwareUpgradesRollback",
+  "getNetworkFirmwareUpgradesStagedEvents",
+  "createNetworkFirmwareUpgradesStagedEvent",
+  "updateNetworkFirmwareUpgradesStagedEvents",
+  "deferNetworkFirmwareUpgradesStagedEvents",
+  "rollbacksNetworkFirmwareUpgradesStagedEvents",
+  "getNetworkFirmwareUpgradesStagedGroups",
+  "createNetworkFirmwareUpgradesStagedGroup",
+  "getNetworkFirmwareUpgradesStagedGroup",
+  "updateNetworkFirmwareUpgradesStagedGroup",
+  "deleteNetworkFirmwareUpgradesStagedGroup",
+  "getNetworkFirmwareUpgradesStagedStages",
+  "updateNetworkFirmwareUpgradesStagedStages",
+  "getNetworkFloorPlans",
+  "createNetworkFloorPlan",
+  "batchNetworkFloorPlansAutoLocateJobs",
+  "cancelNetworkFloorPlansAutoLocateJob",
+  "publishNetworkFloorPlansAutoLocateJob",
+  "recalculateNetworkFloorPlansAutoLocateJob",
+  "batchNetworkFloorPlansDevicesUpdate",
+  "getNetworkFloorPlan",
+  "updateNetworkFloorPlan",
+  "deleteNetworkFloorPlan",
+  "getNetworkGroupPolicies",
+  "createNetworkGroupPolicy",
+  "getNetworkGroupPolicy",
+  "updateNetworkGroupPolicy",
+  "deleteNetworkGroupPolicy",
+  "getNetworkHealthAlerts",
+  "getNetworkLocationScanning",
+  "updateNetworkLocationScanning",
+  "getNetworkLocationScanningHttpServers",
+  "updateNetworkLocationScanningHttpServers",
+  "getNetworkMerakiAuthUsers",
+  "createNetworkMerakiAuthUser",
+  "getNetworkMerakiAuthUser",
+  "deleteNetworkMerakiAuthUser",
+  "updateNetworkMerakiAuthUser",
+  "getNetworkMqttBrokers",
+  "createNetworkMqttBroker",
+  "getNetworkMqttBroker",
+  "updateNetworkMqttBroker",
+  "deleteNetworkMqttBroker",
+  "getNetworkNetflow",
+  "updateNetworkNetflow",
+  "getNetworkNetworkHealthChannelUtilization",
+  "getNetworkPiiPiiKeys",
+  "getNetworkPiiRequests",
+  "createNetworkPiiRequest",
+  "getNetworkPiiRequest",
+  "deleteNetworkPiiRequest",
+  "getNetworkPiiSmDevicesForKey",
+  "getNetworkPiiSmOwnersForKey",
+  "getNetworkPoliciesByClient",
+  "getNetworkSettings",
+  "updateNetworkSettings",
+  "getNetworkSnmp",
+  "updateNetworkSnmp",
+  "updateNetworkSnmpTraps",
+  "getNetworkSplashLoginAttempts",
+  "splitNetwork",
+  "getNetworkSyslogServers",
+  "updateNetworkSyslogServers",
+  "getNetworkTopologyLinkLayer",
+  "getNetworkTraffic",
+  "getNetworkTrafficAnalysis",
+  "updateNetworkTrafficAnalysis",
+  "getNetworkTrafficShapingApplicationCategories",
+  "getNetworkTrafficShapingDscpTaggingOptions",
+  "unbindNetwork",
+  "getNetworkVlanProfiles",
+  "createNetworkVlanProfile",
+  "getNetworkVlanProfilesAssignmentsByDevice",
+  "reassignNetworkVlanProfilesAssignments",
+  "getNetworkVlanProfile",
+  "updateNetworkVlanProfile",
+  "deleteNetworkVlanProfile",
+  "getNetworkWebhooksHttpServers",
+  "createNetworkWebhooksHttpServer",
+  "getNetworkWebhooksHttpServer",
+  "updateNetworkWebhooksHttpServer",
+  "deleteNetworkWebhooksHttpServer",
+  "getNetworkWebhooksPayloadTemplates",
+  "createNetworkWebhooksPayloadTemplate",
+  "getNetworkWebhooksPayloadTemplate",
+  "deleteNetworkWebhooksPayloadTemplate",
+  "updateNetworkWebhooksPayloadTemplate",
+  "createNetworkWebhooksWebhookTest",
+  "getNetworkWebhooksWebhookTest"
 ];

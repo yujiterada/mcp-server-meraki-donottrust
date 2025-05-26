@@ -1,52 +1,9 @@
-function hasBodyPrefixedKeys(obj: any) {
-  // Check if obj is null or not an object
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-  // Get all keys of the object
-  const keys = Object.keys(obj);
-  // Check if any key starts with "body-"
-  return keys.some(key => key.startsWith('body-'));
-}
-
-function transformRequestBody(obj: any) {
-  const transformedObject: any = {};
-  // Loop through all keys in the original object
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "body-"
-    if (key.startsWith('body-')) {
-      // Create a new key without the "body-" prefix
-      const newKey = key.substring(5); // Remove first 5 characters ("body-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    } else {
-      // If the key doesn't start with "body-", keep it as is
-      transformedObject[key] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
-function transformQueryParams(obj: any) {
-  const transformedObject: any = {};
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "query-"
-    if (key.startsWith('query-')) {
-      // Create a new key without the "query-" prefix
-      const newKey = key.substring(6); // Remove first 6 characters ("query-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
 export async function _licensing(client: any, params: any): Promise<any> {
   let response = {data: ''};
   switch (params.name) {
     case "getAdministeredLicensingSubscriptionEntitlements": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/administered/licensing/subscription/entitlements`, { params: queryParams });
+      let path = `/administered/licensing/subscription/entitlements`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -55,13 +12,11 @@ export async function _licensing(client: any, params: any): Promise<any> {
       };
     }
     case "batchAdministeredLicensingSubscriptionNetworksFeatureTiersUpdate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/administered/licensing/subscription/networks/featureTiers/batchUpdate`, { params: queryParams, data: transformedBody });
+      let path = `/administered/licensing/subscription/networks/featureTiers/batchUpdate`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/administered/licensing/subscription/networks/featureTiers/batchUpdate`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -71,8 +26,8 @@ export async function _licensing(client: any, params: any): Promise<any> {
       };
     }
     case "getAdministeredLicensingSubscriptionSubscriptions": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/administered/licensing/subscription/subscriptions`, { params: queryParams });
+      let path = `/administered/licensing/subscription/subscriptions`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -81,13 +36,11 @@ export async function _licensing(client: any, params: any): Promise<any> {
       };
     }
     case "claimAdministeredLicensingSubscriptionSubscriptions": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/administered/licensing/subscription/subscriptions/claim`, { params: queryParams, data: transformedBody });
+      let path = `/administered/licensing/subscription/subscriptions/claim`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/administered/licensing/subscription/subscriptions/claim`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -97,13 +50,11 @@ export async function _licensing(client: any, params: any): Promise<any> {
       };
     }
     case "validateAdministeredLicensingSubscriptionSubscriptionsClaimKey": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/administered/licensing/subscription/subscriptions/claimKey/validate`, { params: queryParams, data: transformedBody });
+      let path = `/administered/licensing/subscription/subscriptions/claimKey/validate`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/administered/licensing/subscription/subscriptions/claimKey/validate`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -113,8 +64,8 @@ export async function _licensing(client: any, params: any): Promise<any> {
       };
     }
     case "getAdministeredLicensingSubscriptionSubscriptionsComplianceStatu": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/administered/licensing/subscription/subscriptions/compliance/statuses`, { params: queryParams });
+      let path = `/administered/licensing/subscription/subscriptions/compliance/statuses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -123,13 +74,11 @@ export async function _licensing(client: any, params: any): Promise<any> {
       };
     }
     case "bindAdministeredLicensingSubscriptionSubscription": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/administered/licensing/subscription/subscriptions/${params.arguments["path-subscriptionId"]}/bind`, { params: queryParams, data: transformedBody });
+      let path = `/administered/licensing/subscription/subscriptions/${params.arguments.path.subscriptionId}/bind`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/administered/licensing/subscription/subscriptions/${params.arguments["path-subscriptionId"]}/bind`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -139,8 +88,8 @@ export async function _licensing(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationLicensingCotermLicenses": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/licensing/coterm/licenses`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/licensing/coterm/licenses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -149,13 +98,11 @@ export async function _licensing(client: any, params: any): Promise<any> {
       };
     }
     case "moveOrganizationLicensingCotermLicenses": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/licensing/coterm/licenses/move`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/licensing/coterm/licenses/move`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/licensing/coterm/licenses/move`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -170,5 +117,13 @@ export async function _licensing(client: any, params: any): Promise<any> {
 }
 
 export const licensingEndpoints = [
-  "getAdministeredLicensingSubscriptionEntitlements","batchAdministeredLicensingSubscriptionNetworksFeatureTiersUpdate","getAdministeredLicensingSubscriptionSubscriptions","claimAdministeredLicensingSubscriptionSubscriptions","validateAdministeredLicensingSubscriptionSubscriptionsClaimKey","getAdministeredLicensingSubscriptionSubscriptionsComplianceStatu","bindAdministeredLicensingSubscriptionSubscription","getOrganizationLicensingCotermLicenses","moveOrganizationLicensingCotermLicenses"
+  "getAdministeredLicensingSubscriptionEntitlements",
+  "batchAdministeredLicensingSubscriptionNetworksFeatureTiersUpdate",
+  "getAdministeredLicensingSubscriptionSubscriptions",
+  "claimAdministeredLicensingSubscriptionSubscriptions",
+  "validateAdministeredLicensingSubscriptionSubscriptionsClaimKey",
+  "getAdministeredLicensingSubscriptionSubscriptionsComplianceStatu",
+  "bindAdministeredLicensingSubscriptionSubscription",
+  "getOrganizationLicensingCotermLicenses",
+  "moveOrganizationLicensingCotermLicenses"
 ];

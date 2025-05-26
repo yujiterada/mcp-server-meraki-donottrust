@@ -1,52 +1,9 @@
-function hasBodyPrefixedKeys(obj: any) {
-  // Check if obj is null or not an object
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-  // Get all keys of the object
-  const keys = Object.keys(obj);
-  // Check if any key starts with "body-"
-  return keys.some(key => key.startsWith('body-'));
-}
-
-function transformRequestBody(obj: any) {
-  const transformedObject: any = {};
-  // Loop through all keys in the original object
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "body-"
-    if (key.startsWith('body-')) {
-      // Create a new key without the "body-" prefix
-      const newKey = key.substring(5); // Remove first 5 characters ("body-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    } else {
-      // If the key doesn't start with "body-", keep it as is
-      transformedObject[key] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
-function transformQueryParams(obj: any) {
-  const transformedObject: any = {};
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "query-"
-    if (key.startsWith('query-')) {
-      // Create a new key without the "query-" prefix
-      const newKey = key.substring(6); // Remove first 6 characters ("query-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
 export async function _organizations(client: any, params: any): Promise<any> {
   let response = {data: ''};
   switch (params.name) {
     case "getOrganizations": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations`, { params: queryParams });
+      let path = `/organizations`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -55,13 +12,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganization": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations`, { params: queryParams, data: transformedBody });
+      let path = `/organizations`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -71,8 +26,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganization": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -81,13 +36,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganization": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -97,13 +50,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganization": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -113,13 +64,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationActionBatch": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/actionBatches`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/actionBatches`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/actionBatches`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -129,8 +78,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationActionBatches": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/actionBatches`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/actionBatches`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -139,8 +88,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationActionBatch": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/actionBatches/{actionBatchId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/actionBatches/{actionBatchId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -149,13 +98,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationActionBatch": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/actionBatches/{actionBatchId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/actionBatches/{actionBatchId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/actionBatches/{actionBatchId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -165,13 +112,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationActionBatch": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/actionBatches/{actionBatchId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/actionBatches/{actionBatchId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/actionBatches/{actionBatchId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -181,8 +126,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAdaptivePolicyAcls": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/acls`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/acls`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -191,13 +136,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationAdaptivePolicyAcl": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/acls`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/acls`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/acls`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -207,8 +150,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAdaptivePolicyAcl": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/acls/{aclId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/acls/{aclId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -217,13 +160,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationAdaptivePolicyAcl": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/acls/{aclId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/acls/{aclId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/acls/{aclId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -233,13 +174,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationAdaptivePolicyAcl": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/acls/{aclId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/acls/{aclId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/acls/{aclId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -249,8 +188,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAdaptivePolicyGroups": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/groups`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/groups`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -259,13 +198,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationAdaptivePolicyGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/groups`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/groups`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/groups`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -275,8 +212,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAdaptivePolicyGroup": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/groups/{id}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/groups/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -285,13 +222,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationAdaptivePolicyGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/groups/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/groups/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/groups/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -301,13 +236,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationAdaptivePolicyGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/groups/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/groups/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/groups/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -317,8 +250,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAdaptivePolicyOverview": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/overview`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/overview`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -327,8 +260,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAdaptivePolicyPolicies": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/policies`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/policies`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -337,13 +270,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationAdaptivePolicyPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/policies`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/policies`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/policies`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -353,8 +284,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAdaptivePolicyPolicy": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/policies/{id}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/policies/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -363,13 +294,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationAdaptivePolicyPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/policies/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/policies/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/policies/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -379,13 +308,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationAdaptivePolicyPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/policies/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/policies/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/policies/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -395,8 +322,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAdaptivePolicySettings": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/settings`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/settings`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -405,13 +332,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationAdaptivePolicySettings": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/settings`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/adaptivePolicy/settings`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/adaptivePolicy/settings`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -421,8 +346,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAdmins": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/admins`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/admins`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -431,13 +356,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationAdmin": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/admins`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/admins`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/admins`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -447,13 +370,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationAdmin": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/admins/{adminId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/admins/{adminId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/admins/{adminId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -463,13 +384,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationAdmin": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/admins/{adminId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/admins/{adminId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/admins/{adminId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -479,8 +398,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAlertsProfiles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/alerts/profiles`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/alerts/profiles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -489,13 +408,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationAlertsProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/alerts/profiles`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/alerts/profiles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/alerts/profiles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -505,13 +422,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationAlertsProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/alerts/profiles/{alertConfigId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/alerts/profiles/{alertConfigId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/alerts/profiles/{alertConfigId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -521,13 +436,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationAlertsProfile": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/alerts/profiles/{alertConfigId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/alerts/profiles/{alertConfigId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/alerts/profiles/{alertConfigId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -537,8 +450,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApiRequests": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/apiRequests`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/apiRequests`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -547,8 +460,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApiRequestsOverview": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/apiRequests/overview`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/apiRequests/overview`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -557,8 +470,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationApiRequestsOverviewResponseCodesByInterval": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/apiRequests/overview/responseCodes/byInterval`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/apiRequests/overview/responseCodes/byInterval`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -567,8 +480,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAssuranceAlerts": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/assurance/alerts`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/assurance/alerts`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -577,13 +490,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "dismissOrganizationAssuranceAlerts": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/assurance/alerts/dismiss`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/assurance/alerts/dismiss`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/assurance/alerts/dismiss`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -593,8 +504,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAssuranceAlertsOverview": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/assurance/alerts/overview`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/assurance/alerts/overview`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -603,8 +514,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAssuranceAlertsOverviewByNetwork": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/assurance/alerts/overview/byNetwork`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/assurance/alerts/overview/byNetwork`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -613,8 +524,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAssuranceAlertsOverviewByType": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/assurance/alerts/overview/byType`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/assurance/alerts/overview/byType`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -623,8 +534,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAssuranceAlertsOverviewHistorical": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/assurance/alerts/overview/historical`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/assurance/alerts/overview/historical`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -633,13 +544,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "restoreOrganizationAssuranceAlerts": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/assurance/alerts/restore`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/assurance/alerts/restore`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/assurance/alerts/restore`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -649,8 +558,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAssuranceAlert": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/assurance/alerts/{id}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/assurance/alerts/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -659,8 +568,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAssuranceProductAnnouncements": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/assurance/productAnnouncements`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/assurance/productAnnouncements`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -669,8 +578,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAuthRadiusServers": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/auth/radius/servers`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/auth/radius/servers`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -679,13 +588,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationAuthRadiusServer": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/auth/radius/servers`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/auth/radius/servers`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/auth/radius/servers`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -695,8 +602,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAuthRadiusServersAssignments": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/auth/radius/servers/assignments`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/auth/radius/servers/assignments`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -705,8 +612,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationAuthRadiusServer": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/auth/radius/servers/{serverId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/auth/radius/servers/{serverId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -715,13 +622,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationAuthRadiusServer": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/auth/radius/servers/{serverId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/auth/radius/servers/{serverId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/auth/radius/servers/{serverId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -731,13 +636,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationAuthRadiusServer": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/auth/radius/servers/{serverId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/auth/radius/servers/{serverId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/auth/radius/servers/{serverId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -747,8 +650,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationBrandingPolicies": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/brandingPolicies`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/brandingPolicies`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -757,13 +660,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationBrandingPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/brandingPolicies`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/brandingPolicies`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/brandingPolicies`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -773,8 +674,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationBrandingPoliciesPriorities": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/brandingPolicies/priorities`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/brandingPolicies/priorities`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -783,13 +684,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationBrandingPoliciesPriorities": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/brandingPolicies/priorities`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/brandingPolicies/priorities`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/brandingPolicies/priorities`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -799,8 +698,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationBrandingPolicy": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/brandingPolicies/{brandingPolicyId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/brandingPolicies/{brandingPolicyId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -809,13 +708,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationBrandingPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/brandingPolicies/{brandingPolicyId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/brandingPolicies/{brandingPolicyId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/brandingPolicies/{brandingPolicyId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -825,13 +722,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationBrandingPolicy": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/brandingPolicies/{brandingPolicyId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/brandingPolicies/{brandingPolicyId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/brandingPolicies/{brandingPolicyId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -841,8 +736,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCertificates": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/certificates`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/certificates`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -851,13 +746,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationCertificatesImport": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/certificates/import`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/certificates/import`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/certificates/import`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -867,13 +760,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationCertificate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/certificates/{certificateId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/certificates/{certificateId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/certificates/{certificateId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -883,13 +774,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationCertificate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/certificates/{certificateId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/certificates/{certificateId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/certificates/{certificateId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -899,8 +788,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCertificateContents": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/certificates/{certificateId}/contents`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/certificates/{certificateId}/contents`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -909,13 +798,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "claimIntoOrganization": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/claim`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/claim`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/claim`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -925,8 +812,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationClientsBandwidthUsageHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/clients/bandwidthUsageHistory`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/clients/bandwidthUsageHistory`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -935,8 +822,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationClientsOverview": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/clients/overview`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/clients/overview`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -945,8 +832,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationClientsSearch": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/clients/search`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/clients/search`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -955,13 +842,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "cloneOrganization": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/clone`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/clone`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/clone`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -971,8 +856,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCloudConnectivityRequirements": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/cloud/connectivity/requirements`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/cloud/connectivity/requirements`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -981,8 +866,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationConfigTemplates": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/configTemplates`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/configTemplates`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -991,13 +876,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationConfigTemplate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/configTemplates`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/configTemplates`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/configTemplates`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1007,8 +890,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationConfigTemplate": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/{configTemplateId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/configTemplates/{configTemplateId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1017,13 +900,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationConfigTemplate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/{configTemplateId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/configTemplates/{configTemplateId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/{configTemplateId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1033,13 +914,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationConfigTemplate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/{configTemplateId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/configTemplates/{configTemplateId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/configTemplates/{configTemplateId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1049,8 +928,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationConfigurationChanges": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/configurationChanges`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/configurationChanges`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1059,8 +938,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevices": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1069,8 +948,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesAvailabilities": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/availabilities`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/availabilities`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1079,8 +958,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesAvailabilitiesChangeHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/availabilities/changeHistory`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/availabilities/changeHistory`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1089,8 +968,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesBootsHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/boots/history`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/boots/history`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1099,13 +978,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationDevicesControllerMigration": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/controller/migrations`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/controller/migrations`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/controller/migrations`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1115,8 +992,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesControllerMigrations": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/controller/migrations`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/controller/migrations`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1125,13 +1002,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "bulkUpdateOrganizationDevicesDetails": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/details/bulkUpdate`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/details/bulkUpdate`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/details/bulkUpdate`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1141,8 +1016,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesOverviewByModel": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/overview/byModel`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/overview/byModel`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1151,8 +1026,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesPacketCaptureCaptures": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/captures`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1161,13 +1036,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationDevicesPacketCaptureCapture": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/captures`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1177,13 +1050,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "bulkOrganizationDevicesPacketCaptureCapturesCreate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures/bulkCreate`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/captures/bulkCreate`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures/bulkCreate`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1193,13 +1064,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "bulkOrganizationDevicesPacketCaptureCapturesDelete": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures/bulkDelete`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/captures/bulkDelete`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures/bulkDelete`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1209,13 +1078,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationDevicesPacketCaptureCapture": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures/{captureId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/captures/{captureId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures/{captureId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1225,13 +1092,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "generateOrganizationDevicesPacketCaptureCaptureDownloadUrl": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures/{captureId}/downloadUrl/generate`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/captures/{captureId}/downloadUrl/generate`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures/{captureId}/downloadUrl/generate`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1241,13 +1106,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "stopOrganizationDevicesPacketCaptureCapture": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures/{captureId}/stop`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/captures/{captureId}/stop`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/captures/{captureId}/stop`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1257,8 +1120,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesPacketCaptureSchedules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/schedules`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/schedules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1267,13 +1130,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationDevicesPacketCaptureSchedule": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/schedules`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/schedules`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/schedules`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1283,13 +1144,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "bulkOrganizationDevicesPacketCaptureSchedulesDelete": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/schedules/bulkDelete`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/schedules/bulkDelete`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/schedules/bulkDelete`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1299,13 +1158,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "reorderOrganizationDevicesPacketCaptureSchedules": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/schedules/reorder`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/schedules/reorder`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/schedules/reorder`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1315,13 +1172,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationDevicesPacketCaptureSchedule": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/schedules/{scheduleId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/schedules/{scheduleId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/schedules/{scheduleId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1331,13 +1186,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationDevicesPacketCaptureSchedule": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/schedules/{scheduleId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCapture/schedules/{scheduleId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCapture/schedules/{scheduleId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1347,13 +1200,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "tasksOrganizationDevicesPacketCapture": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCaptures/{packetId}/tasks`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCaptures/{packetId}/tasks`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCaptures/{packetId}/tasks`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1363,8 +1214,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesPacketCaptureTask": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/packetCaptures/{packetId}/tasks/{id}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/packetCaptures/{packetId}/tasks/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1373,8 +1224,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesPowerModulesStatusesByDevice": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/powerModules/statuses/byDevice`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/powerModules/statuses/byDevice`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1383,8 +1234,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesProvisioningStatuses": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/provisioning/statuses`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/provisioning/statuses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1393,8 +1244,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesStatuses": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/statuses`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/statuses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1403,8 +1254,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesStatusesOverview": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/statuses/overview`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/statuses/overview`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1413,8 +1264,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesSyslogServersRolesByNetwork": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/syslog/servers/roles/byNetwork`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/syslog/servers/roles/byNetwork`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1423,8 +1274,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesSystemMemoryUsageHistoryByInterval": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/system/memory/usage/history/byInterval`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/system/memory/usage/history/byInterval`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1433,8 +1284,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesUplinksAddressesByDevice": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/uplinks/addresses/byDevice`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/uplinks/addresses/byDevice`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1443,8 +1294,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationDevicesUplinksLossAndLatency": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/devices/uplinksLossAndLatency`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/devices/uplinksLossAndLatency`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1453,8 +1304,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationEarlyAccessFeatures": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/earlyAccess/features`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/earlyAccess/features`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1463,8 +1314,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationEarlyAccessFeaturesOptIns": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/earlyAccess/features/optIns`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/earlyAccess/features/optIns`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1473,13 +1324,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationEarlyAccessFeaturesOptIn": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/earlyAccess/features/optIns`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/earlyAccess/features/optIns`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/earlyAccess/features/optIns`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1489,8 +1338,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationEarlyAccessFeaturesOptIn": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/earlyAccess/features/optIns/{optInId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/earlyAccess/features/optIns/{optInId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1499,13 +1348,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationEarlyAccessFeaturesOptIn": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/earlyAccess/features/optIns/{optInId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/earlyAccess/features/optIns/{optInId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/earlyAccess/features/optIns/{optInId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1515,13 +1362,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationEarlyAccessFeaturesOptIn": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/earlyAccess/features/optIns/{optInId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/earlyAccess/features/optIns/{optInId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/earlyAccess/features/optIns/{optInId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1531,13 +1376,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationExtensionsSdwanmanagerInterconnect": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/extensions/sdwanmanager/interconnects/{interconnectId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/extensions/sdwanmanager/interconnects/{interconnectId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/extensions/sdwanmanager/interconnects/{interconnectId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1547,8 +1390,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationExtensionsThousandEyesNetworks": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/extensions/thousandEyes/networks`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/extensions/thousandEyes/networks`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1557,13 +1400,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationExtensionsThousandEyesNetwork": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/extensions/thousandEyes/networks`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/extensions/thousandEyes/networks`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/extensions/thousandEyes/networks`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1573,8 +1414,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationExtensionsThousandEyesNetworksSupported": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/extensions/thousandEyes/networks/supported`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/extensions/thousandEyes/networks/supported`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1583,8 +1424,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationExtensionsThousandEyesNetwork": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/extensions/thousandEyes/networks/{networkId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/extensions/thousandEyes/networks/{networkId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1593,13 +1434,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationExtensionsThousandEyesNetwork": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/extensions/thousandEyes/networks/{networkId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/extensions/thousandEyes/networks/{networkId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/extensions/thousandEyes/networks/{networkId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1609,13 +1448,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationExtensionsThousandEyesNetwork": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/extensions/thousandEyes/networks/{networkId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/extensions/thousandEyes/networks/{networkId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/extensions/thousandEyes/networks/{networkId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1625,13 +1462,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationExtensionsThousandEyesTest": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/extensions/thousandEyes/tests`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/extensions/thousandEyes/tests`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/extensions/thousandEyes/tests`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1641,8 +1476,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationFirmwareUpgrades": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/firmware/upgrades`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/firmware/upgrades`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1651,8 +1486,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationFirmwareUpgradesByDevice": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/firmware/upgrades/byDevice`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/firmware/upgrades/byDevice`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1661,8 +1496,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationFloorPlansAutoLocateDevices": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/floorPlans/autoLocate/devices`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/floorPlans/autoLocate/devices`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1671,8 +1506,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationFloorPlansAutoLocateStatuses": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/floorPlans/autoLocate/statuses`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/floorPlans/autoLocate/statuses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1681,8 +1516,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationIntegrationsXdrNetworks": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/integrations/xdr/networks`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/integrations/xdr/networks`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1691,13 +1526,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "disableOrganizationIntegrationsXdrNetworks": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/integrations/xdr/networks/disable`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/integrations/xdr/networks/disable`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/integrations/xdr/networks/disable`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1707,13 +1540,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "enableOrganizationIntegrationsXdrNetworks": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/integrations/xdr/networks/enable`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/integrations/xdr/networks/enable`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/integrations/xdr/networks/enable`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1723,13 +1554,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "claimIntoOrganizationInventory": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/claim`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/claim`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/claim`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1739,8 +1568,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationInventoryDevices": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/inventory/devices`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/devices`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1749,13 +1578,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationInventoryDevicesSwapsBulk": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/devices/swaps/bulk`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/devices/swaps/bulk`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/devices/swaps/bulk`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1765,8 +1592,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationInventoryDevicesSwapsBulk": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/inventory/devices/swaps/bulk/{id}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/devices/swaps/bulk/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1775,8 +1602,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationInventoryDevice": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/inventory/devices/{serial}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/devices/{serial}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1785,13 +1612,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationInventoryOnboardingCloudMonitoringExportEvent": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/onboarding/cloudMonitoring/exportEvents`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/onboarding/cloudMonitoring/exportEvents`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/onboarding/cloudMonitoring/exportEvents`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1801,13 +1626,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationInventoryOnboardingCloudMonitoringImport": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/onboarding/cloudMonitoring/imports`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/onboarding/cloudMonitoring/imports`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/onboarding/cloudMonitoring/imports`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1817,8 +1640,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationInventoryOnboardingCloudMonitoringImports": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/inventory/onboarding/cloudMonitoring/imports`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/onboarding/cloudMonitoring/imports`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1827,8 +1650,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationInventoryOnboardingCloudMonitoringNetworks": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/inventory/onboarding/cloudMonitoring/networks`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/onboarding/cloudMonitoring/networks`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1837,13 +1660,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationInventoryOnboardingCloudMonitoringPrepare": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/onboarding/cloudMonitoring/prepare`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/onboarding/cloudMonitoring/prepare`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/onboarding/cloudMonitoring/prepare`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1853,13 +1674,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "claimOrganizationInventoryOrders": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/orders/claim`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/orders/claim`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/orders/claim`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1869,13 +1688,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "previewOrganizationInventoryOrders": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/orders/preview`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/orders/preview`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/orders/preview`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1885,13 +1702,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "releaseFromOrganizationInventory": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/release`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/inventory/release`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/inventory/release`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1901,8 +1716,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationLicenses": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/licenses`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/licenses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1911,13 +1726,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "assignOrganizationLicensesSeats": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/licenses/assignSeats`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/licenses/assignSeats`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/licenses/assignSeats`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1927,13 +1740,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "moveOrganizationLicenses": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/licenses/move`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/licenses/move`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/licenses/move`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1943,13 +1754,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "moveOrganizationLicensesSeats": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/licenses/moveSeats`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/licenses/moveSeats`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/licenses/moveSeats`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1959,8 +1768,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationLicensesOverview": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/licenses/overview`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/licenses/overview`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1969,13 +1778,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "renewOrganizationLicensesSeats": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/licenses/renewSeats`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/licenses/renewSeats`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/licenses/renewSeats`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -1985,8 +1792,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationLicense": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/licenses/{licenseId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/licenses/{licenseId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -1995,13 +1802,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationLicense": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/licenses/{licenseId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/licenses/{licenseId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/licenses/{licenseId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2011,8 +1816,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationLoginSecurity": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/loginSecurity`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/loginSecurity`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2021,13 +1826,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationLoginSecurity": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/loginSecurity`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/loginSecurity`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/loginSecurity`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2037,8 +1840,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationNetworks": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/networks`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/networks`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2047,13 +1850,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationNetwork": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/networks`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/networks`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/networks`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2063,13 +1864,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "combineOrganizationNetworks": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/networks/combine`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/networks/combine`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/networks/combine`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2079,13 +1878,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createNetworkMove": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/networks/moves`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/networks/moves`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/networks/moves`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2095,8 +1892,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkMoves": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/networks/moves`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/networks/moves`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2105,8 +1902,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkMove": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/networks/moves/{networkMoveId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/networks/moves/{networkMoveId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2115,8 +1912,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationOpenapiSpec": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/openapiSpec`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/openapiSpec`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2125,8 +1922,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationPoliciesAssignmentsByClient": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/policies/assignments/byClient`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/policies/assignments/byClient`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2135,8 +1932,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationPolicyObjects": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/policyObjects`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/policyObjects`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2145,13 +1942,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationPolicyObject": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/policyObjects`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/policyObjects`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/policyObjects`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2161,8 +1956,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationPolicyObjectsGroups": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/groups`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/policyObjects/groups`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2171,13 +1966,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationPolicyObjectsGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/groups`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/policyObjects/groups`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/groups`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2187,8 +1980,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationPolicyObjectsGroup": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/groups/{policyObjectGroupId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/policyObjects/groups/{policyObjectGroupId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2197,13 +1990,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationPolicyObjectsGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/groups/{policyObjectGroupId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/policyObjects/groups/{policyObjectGroupId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/groups/{policyObjectGroupId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2213,13 +2004,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationPolicyObjectsGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/groups/{policyObjectGroupId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/policyObjects/groups/{policyObjectGroupId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/groups/{policyObjectGroupId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2229,8 +2018,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationPolicyObject": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/{policyObjectId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/policyObjects/{policyObjectId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2239,13 +2028,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationPolicyObject": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/{policyObjectId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/policyObjects/{policyObjectId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/{policyObjectId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2255,13 +2042,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationPolicyObject": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/{policyObjectId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/policyObjects/{policyObjectId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/policyObjects/{policyObjectId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2271,8 +2056,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSaml": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/saml`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/saml`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2281,13 +2066,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSaml": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/saml`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/saml`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/saml`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2297,8 +2080,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSamlIdps": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/saml/idps`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/saml/idps`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2307,13 +2090,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSamlIdp": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/saml/idps`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/saml/idps`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/saml/idps`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2323,13 +2104,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSamlIdp": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/saml/idps/{idpId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/saml/idps/{idpId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/saml/idps/{idpId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2339,8 +2118,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSamlIdp": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/saml/idps/{idpId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/saml/idps/{idpId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2349,13 +2128,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSamlIdp": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/saml/idps/{idpId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/saml/idps/{idpId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/saml/idps/{idpId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2365,8 +2142,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSamlRoles": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/samlRoles`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/samlRoles`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2375,13 +2152,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSamlRole": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/samlRoles`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/samlRoles`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/samlRoles`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2391,8 +2166,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSamlRole": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/samlRoles/{samlRoleId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/samlRoles/{samlRoleId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2401,13 +2176,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSamlRole": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/samlRoles/{samlRoleId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/samlRoles/{samlRoleId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/samlRoles/{samlRoleId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2417,13 +2190,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSamlRole": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/samlRoles/{samlRoleId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/samlRoles/{samlRoleId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/samlRoles/{samlRoleId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2433,8 +2204,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSaseConnectivityEnrollableNetworks": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sase/connectivity/enrollableNetworks`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sase/connectivity/enrollableNetworks`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2443,13 +2214,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSaseConnectivitySitesBulkDetach": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/sase/connectivity/sites/bulkDetach`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/sase/connectivity/sites/bulkDetach`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/sase/connectivity/sites/bulkDetach`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2459,13 +2228,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSaseConnectivitySitesBulkEnroll": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/sase/connectivity/sites/bulkEnroll`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/sase/connectivity/sites/bulkEnroll`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/sase/connectivity/sites/bulkEnroll`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2475,8 +2242,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSaseConnectivitySite": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/sase/connectivity/sites/{id}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/sase/connectivity/sites/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2485,8 +2252,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSnmp": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/snmp`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/snmp`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2495,13 +2262,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSnmp": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/snmp`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/snmp`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/snmp`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2511,8 +2276,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSnmpTrapsByNetwork": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/snmp/traps/byNetwork`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/snmp/traps/byNetwork`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2521,13 +2286,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSpacesIntegrationRemove": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/spaces/integration/remove`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/spaces/integration/remove`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/spaces/integration/remove`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2537,13 +2300,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSpacesIntegrationRemove": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/spaces/integration/remove`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/spaces/integration/remove`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/spaces/integration/remove`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2553,8 +2314,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSplashAsset": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/splash/assets/{id}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/splash/assets/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2563,13 +2324,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSplashAsset": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/splash/assets/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/splash/assets/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/splash/assets/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2579,8 +2338,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSplashThemes": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/splash/themes`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/splash/themes`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2589,13 +2348,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSplashTheme": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/splash/themes`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/splash/themes`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/splash/themes`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2605,13 +2362,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSplashTheme": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/splash/themes/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/splash/themes/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/splash/themes/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2621,13 +2376,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSplashThemeAsset": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/splash/themes/{themeIdentifier}/assets`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/splash/themes/{themeIdentifier}/assets`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/splash/themes/{themeIdentifier}/assets`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2637,8 +2390,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSummaryTopAppliancesByUtilization": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/summary/top/appliances/byUtilization`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/summary/top/appliances/byUtilization`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2647,8 +2400,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSummaryTopApplicationsByUsage": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/summary/top/applications/byUsage`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/summary/top/applications/byUsage`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2657,8 +2410,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSummaryTopApplicationsCategoriesByUsage": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/summary/top/applications/categories/byUsage`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/summary/top/applications/categories/byUsage`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2667,8 +2420,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSummaryTopClientsByUsage": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/summary/top/clients/byUsage`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/summary/top/clients/byUsage`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2677,8 +2430,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSummaryTopClientsManufacturersByUsage": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/summary/top/clients/manufacturers/byUsage`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/summary/top/clients/manufacturers/byUsage`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2687,8 +2440,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSummaryTopDevicesByUsage": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/summary/top/devices/byUsage`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/summary/top/devices/byUsage`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2697,8 +2450,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSummaryTopDevicesModelsByUsage": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/summary/top/devices/models/byUsage`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/summary/top/devices/models/byUsage`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2707,8 +2460,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSummaryTopNetworksByStatus": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/summary/top/networks/byStatus`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/summary/top/networks/byStatus`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2717,8 +2470,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSummaryTopSsidsByUsage": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/summary/top/ssids/byUsage`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/summary/top/ssids/byUsage`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2727,8 +2480,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSummaryTopSwitchesByEnergyUsage": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/summary/top/switches/byEnergyUsage`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/summary/top/switches/byEnergyUsage`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2737,8 +2490,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSupportSalesRepresentatives": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/support/salesRepresentatives`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/support/salesRepresentatives`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2747,8 +2500,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationUplinksStatuses": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/uplinks/statuses`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/uplinks/statuses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2757,8 +2510,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationWebhooksAlertTypes": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/webhooks/alertTypes`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/alertTypes`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2767,8 +2520,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationWebhooksCallbacksStatus": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/webhooks/callbacks/statuses/{callbackId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/callbacks/statuses/{callbackId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2777,8 +2530,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationWebhooksHttpServers": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/webhooks/httpServers`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/httpServers`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2787,13 +2540,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationWebhooksHttpServer": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/webhooks/httpServers`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/httpServers`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/webhooks/httpServers`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2803,8 +2554,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationWebhooksHttpServer": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/webhooks/httpServers/{id}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/httpServers/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2813,13 +2564,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationWebhooksHttpServer": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/webhooks/httpServers/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/httpServers/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/webhooks/httpServers/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2829,13 +2578,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationWebhooksHttpServer": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/webhooks/httpServers/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/httpServers/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/webhooks/httpServers/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2845,8 +2592,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationWebhooksLogs": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/webhooks/logs`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/logs`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2855,8 +2602,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationWebhooksPayloadTemplates": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/webhooks/payloadTemplates`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/payloadTemplates`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2865,13 +2612,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationWebhooksPayloadTemplate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/webhooks/payloadTemplates`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/payloadTemplates`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/webhooks/payloadTemplates`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2881,8 +2626,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationWebhooksPayloadTemplate": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/webhooks/payloadTemplates/{payloadTemplateId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/payloadTemplates/{payloadTemplateId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2891,13 +2636,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationWebhooksPayloadTemplate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/webhooks/payloadTemplates/{payloadTemplateId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/payloadTemplates/{payloadTemplateId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/webhooks/payloadTemplates/{payloadTemplateId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2907,13 +2650,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationWebhooksPayloadTemplate": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/webhooks/payloadTemplates/{payloadTemplateId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/payloadTemplates/{payloadTemplateId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/webhooks/payloadTemplates/{payloadTemplateId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2923,13 +2664,11 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationWebhooksWebhookTest": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/webhooks/webhookTests`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/webhookTests`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/webhooks/webhookTests`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -2939,8 +2678,8 @@ export async function _organizations(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationWebhooksWebhookTest": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/webhooks/webhookTests/{webhookTestId}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/webhooks/webhookTests/{webhookTestId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -2954,5 +2693,229 @@ export async function _organizations(client: any, params: any): Promise<any> {
 }
 
 export const organizationsEndpoints = [
-  "getOrganizations","createOrganization","getOrganization","updateOrganization","deleteOrganization","createOrganizationActionBatch","getOrganizationActionBatches","getOrganizationActionBatch","deleteOrganizationActionBatch","updateOrganizationActionBatch","getOrganizationAdaptivePolicyAcls","createOrganizationAdaptivePolicyAcl","getOrganizationAdaptivePolicyAcl","updateOrganizationAdaptivePolicyAcl","deleteOrganizationAdaptivePolicyAcl","getOrganizationAdaptivePolicyGroups","createOrganizationAdaptivePolicyGroup","getOrganizationAdaptivePolicyGroup","updateOrganizationAdaptivePolicyGroup","deleteOrganizationAdaptivePolicyGroup","getOrganizationAdaptivePolicyOverview","getOrganizationAdaptivePolicyPolicies","createOrganizationAdaptivePolicyPolicy","getOrganizationAdaptivePolicyPolicy","updateOrganizationAdaptivePolicyPolicy","deleteOrganizationAdaptivePolicyPolicy","getOrganizationAdaptivePolicySettings","updateOrganizationAdaptivePolicySettings","getOrganizationAdmins","createOrganizationAdmin","updateOrganizationAdmin","deleteOrganizationAdmin","getOrganizationAlertsProfiles","createOrganizationAlertsProfile","updateOrganizationAlertsProfile","deleteOrganizationAlertsProfile","getOrganizationApiRequests","getOrganizationApiRequestsOverview","getOrganizationApiRequestsOverviewResponseCodesByInterval","getOrganizationAssuranceAlerts","dismissOrganizationAssuranceAlerts","getOrganizationAssuranceAlertsOverview","getOrganizationAssuranceAlertsOverviewByNetwork","getOrganizationAssuranceAlertsOverviewByType","getOrganizationAssuranceAlertsOverviewHistorical","restoreOrganizationAssuranceAlerts","getOrganizationAssuranceAlert","getOrganizationAssuranceProductAnnouncements","getOrganizationAuthRadiusServers","createOrganizationAuthRadiusServer","getOrganizationAuthRadiusServersAssignments","getOrganizationAuthRadiusServer","updateOrganizationAuthRadiusServer","deleteOrganizationAuthRadiusServer","getOrganizationBrandingPolicies","createOrganizationBrandingPolicy","getOrganizationBrandingPoliciesPriorities","updateOrganizationBrandingPoliciesPriorities","getOrganizationBrandingPolicy","updateOrganizationBrandingPolicy","deleteOrganizationBrandingPolicy","getOrganizationCertificates","createOrganizationCertificatesImport","deleteOrganizationCertificate","updateOrganizationCertificate","getOrganizationCertificateContents","claimIntoOrganization","getOrganizationClientsBandwidthUsageHistory","getOrganizationClientsOverview","getOrganizationClientsSearch","cloneOrganization","getOrganizationCloudConnectivityRequirements","getOrganizationConfigTemplates","createOrganizationConfigTemplate","getOrganizationConfigTemplate","updateOrganizationConfigTemplate","deleteOrganizationConfigTemplate","getOrganizationConfigurationChanges","getOrganizationDevices","getOrganizationDevicesAvailabilities","getOrganizationDevicesAvailabilitiesChangeHistory","getOrganizationDevicesBootsHistory","createOrganizationDevicesControllerMigration","getOrganizationDevicesControllerMigrations","bulkUpdateOrganizationDevicesDetails","getOrganizationDevicesOverviewByModel","getOrganizationDevicesPacketCaptureCaptures","createOrganizationDevicesPacketCaptureCapture","bulkOrganizationDevicesPacketCaptureCapturesCreate","bulkOrganizationDevicesPacketCaptureCapturesDelete","deleteOrganizationDevicesPacketCaptureCapture","generateOrganizationDevicesPacketCaptureCaptureDownloadUrl","stopOrganizationDevicesPacketCaptureCapture","getOrganizationDevicesPacketCaptureSchedules","createOrganizationDevicesPacketCaptureSchedule","bulkOrganizationDevicesPacketCaptureSchedulesDelete","reorderOrganizationDevicesPacketCaptureSchedules","updateOrganizationDevicesPacketCaptureSchedule","deleteOrganizationDevicesPacketCaptureSchedule","tasksOrganizationDevicesPacketCapture","getOrganizationDevicesPacketCaptureTask","getOrganizationDevicesPowerModulesStatusesByDevice","getOrganizationDevicesProvisioningStatuses","getOrganizationDevicesStatuses","getOrganizationDevicesStatusesOverview","getOrganizationDevicesSyslogServersRolesByNetwork","getOrganizationDevicesSystemMemoryUsageHistoryByInterval","getOrganizationDevicesUplinksAddressesByDevice","getOrganizationDevicesUplinksLossAndLatency","getOrganizationEarlyAccessFeatures","getOrganizationEarlyAccessFeaturesOptIns","createOrganizationEarlyAccessFeaturesOptIn","getOrganizationEarlyAccessFeaturesOptIn","updateOrganizationEarlyAccessFeaturesOptIn","deleteOrganizationEarlyAccessFeaturesOptIn","updateOrganizationExtensionsSdwanmanagerInterconnect","getOrganizationExtensionsThousandEyesNetworks","createOrganizationExtensionsThousandEyesNetwork","getOrganizationExtensionsThousandEyesNetworksSupported","getOrganizationExtensionsThousandEyesNetwork","updateOrganizationExtensionsThousandEyesNetwork","deleteOrganizationExtensionsThousandEyesNetwork","createOrganizationExtensionsThousandEyesTest","getOrganizationFirmwareUpgrades","getOrganizationFirmwareUpgradesByDevice","getOrganizationFloorPlansAutoLocateDevices","getOrganizationFloorPlansAutoLocateStatuses","getOrganizationIntegrationsXdrNetworks","disableOrganizationIntegrationsXdrNetworks","enableOrganizationIntegrationsXdrNetworks","claimIntoOrganizationInventory","getOrganizationInventoryDevices","createOrganizationInventoryDevicesSwapsBulk","getOrganizationInventoryDevicesSwapsBulk","getOrganizationInventoryDevice","createOrganizationInventoryOnboardingCloudMonitoringExportEvent","createOrganizationInventoryOnboardingCloudMonitoringImport","getOrganizationInventoryOnboardingCloudMonitoringImports","getOrganizationInventoryOnboardingCloudMonitoringNetworks","createOrganizationInventoryOnboardingCloudMonitoringPrepare","claimOrganizationInventoryOrders","previewOrganizationInventoryOrders","releaseFromOrganizationInventory","getOrganizationLicenses","assignOrganizationLicensesSeats","moveOrganizationLicenses","moveOrganizationLicensesSeats","getOrganizationLicensesOverview","renewOrganizationLicensesSeats","getOrganizationLicense","updateOrganizationLicense","getOrganizationLoginSecurity","updateOrganizationLoginSecurity","getOrganizationNetworks","createOrganizationNetwork","combineOrganizationNetworks","createNetworkMove","getNetworkMoves","getNetworkMove","getOrganizationOpenapiSpec","getOrganizationPoliciesAssignmentsByClient","getOrganizationPolicyObjects","createOrganizationPolicyObject","getOrganizationPolicyObjectsGroups","createOrganizationPolicyObjectsGroup","getOrganizationPolicyObjectsGroup","updateOrganizationPolicyObjectsGroup","deleteOrganizationPolicyObjectsGroup","getOrganizationPolicyObject","updateOrganizationPolicyObject","deleteOrganizationPolicyObject","getOrganizationSaml","updateOrganizationSaml","getOrganizationSamlIdps","createOrganizationSamlIdp","updateOrganizationSamlIdp","getOrganizationSamlIdp","deleteOrganizationSamlIdp","getOrganizationSamlRoles","createOrganizationSamlRole","getOrganizationSamlRole","updateOrganizationSamlRole","deleteOrganizationSamlRole","getOrganizationSaseConnectivityEnrollableNetworks","deleteOrganizationSaseConnectivitySitesBulkDetach","createOrganizationSaseConnectivitySitesBulkEnroll","getOrganizationSaseConnectivitySite","getOrganizationSnmp","updateOrganizationSnmp","getOrganizationSnmpTrapsByNetwork","deleteOrganizationSpacesIntegrationRemove","createOrganizationSpacesIntegrationRemove","getOrganizationSplashAsset","deleteOrganizationSplashAsset","getOrganizationSplashThemes","createOrganizationSplashTheme","deleteOrganizationSplashTheme","createOrganizationSplashThemeAsset","getOrganizationSummaryTopAppliancesByUtilization","getOrganizationSummaryTopApplicationsByUsage","getOrganizationSummaryTopApplicationsCategoriesByUsage","getOrganizationSummaryTopClientsByUsage","getOrganizationSummaryTopClientsManufacturersByUsage","getOrganizationSummaryTopDevicesByUsage","getOrganizationSummaryTopDevicesModelsByUsage","getOrganizationSummaryTopNetworksByStatus","getOrganizationSummaryTopSsidsByUsage","getOrganizationSummaryTopSwitchesByEnergyUsage","getOrganizationSupportSalesRepresentatives","getOrganizationUplinksStatuses","getOrganizationWebhooksAlertTypes","getOrganizationWebhooksCallbacksStatus","getOrganizationWebhooksHttpServers","createOrganizationWebhooksHttpServer","getOrganizationWebhooksHttpServer","updateOrganizationWebhooksHttpServer","deleteOrganizationWebhooksHttpServer","getOrganizationWebhooksLogs","getOrganizationWebhooksPayloadTemplates","createOrganizationWebhooksPayloadTemplate","getOrganizationWebhooksPayloadTemplate","deleteOrganizationWebhooksPayloadTemplate","updateOrganizationWebhooksPayloadTemplate","createOrganizationWebhooksWebhookTest","getOrganizationWebhooksWebhookTest"
+  "getOrganizations",
+  "createOrganization",
+  "getOrganization",
+  "updateOrganization",
+  "deleteOrganization",
+  "createOrganizationActionBatch",
+  "getOrganizationActionBatches",
+  "getOrganizationActionBatch",
+  "deleteOrganizationActionBatch",
+  "updateOrganizationActionBatch",
+  "getOrganizationAdaptivePolicyAcls",
+  "createOrganizationAdaptivePolicyAcl",
+  "getOrganizationAdaptivePolicyAcl",
+  "updateOrganizationAdaptivePolicyAcl",
+  "deleteOrganizationAdaptivePolicyAcl",
+  "getOrganizationAdaptivePolicyGroups",
+  "createOrganizationAdaptivePolicyGroup",
+  "getOrganizationAdaptivePolicyGroup",
+  "updateOrganizationAdaptivePolicyGroup",
+  "deleteOrganizationAdaptivePolicyGroup",
+  "getOrganizationAdaptivePolicyOverview",
+  "getOrganizationAdaptivePolicyPolicies",
+  "createOrganizationAdaptivePolicyPolicy",
+  "getOrganizationAdaptivePolicyPolicy",
+  "updateOrganizationAdaptivePolicyPolicy",
+  "deleteOrganizationAdaptivePolicyPolicy",
+  "getOrganizationAdaptivePolicySettings",
+  "updateOrganizationAdaptivePolicySettings",
+  "getOrganizationAdmins",
+  "createOrganizationAdmin",
+  "updateOrganizationAdmin",
+  "deleteOrganizationAdmin",
+  "getOrganizationAlertsProfiles",
+  "createOrganizationAlertsProfile",
+  "updateOrganizationAlertsProfile",
+  "deleteOrganizationAlertsProfile",
+  "getOrganizationApiRequests",
+  "getOrganizationApiRequestsOverview",
+  "getOrganizationApiRequestsOverviewResponseCodesByInterval",
+  "getOrganizationAssuranceAlerts",
+  "dismissOrganizationAssuranceAlerts",
+  "getOrganizationAssuranceAlertsOverview",
+  "getOrganizationAssuranceAlertsOverviewByNetwork",
+  "getOrganizationAssuranceAlertsOverviewByType",
+  "getOrganizationAssuranceAlertsOverviewHistorical",
+  "restoreOrganizationAssuranceAlerts",
+  "getOrganizationAssuranceAlert",
+  "getOrganizationAssuranceProductAnnouncements",
+  "getOrganizationAuthRadiusServers",
+  "createOrganizationAuthRadiusServer",
+  "getOrganizationAuthRadiusServersAssignments",
+  "getOrganizationAuthRadiusServer",
+  "updateOrganizationAuthRadiusServer",
+  "deleteOrganizationAuthRadiusServer",
+  "getOrganizationBrandingPolicies",
+  "createOrganizationBrandingPolicy",
+  "getOrganizationBrandingPoliciesPriorities",
+  "updateOrganizationBrandingPoliciesPriorities",
+  "getOrganizationBrandingPolicy",
+  "updateOrganizationBrandingPolicy",
+  "deleteOrganizationBrandingPolicy",
+  "getOrganizationCertificates",
+  "createOrganizationCertificatesImport",
+  "deleteOrganizationCertificate",
+  "updateOrganizationCertificate",
+  "getOrganizationCertificateContents",
+  "claimIntoOrganization",
+  "getOrganizationClientsBandwidthUsageHistory",
+  "getOrganizationClientsOverview",
+  "getOrganizationClientsSearch",
+  "cloneOrganization",
+  "getOrganizationCloudConnectivityRequirements",
+  "getOrganizationConfigTemplates",
+  "createOrganizationConfigTemplate",
+  "getOrganizationConfigTemplate",
+  "updateOrganizationConfigTemplate",
+  "deleteOrganizationConfigTemplate",
+  "getOrganizationConfigurationChanges",
+  "getOrganizationDevices",
+  "getOrganizationDevicesAvailabilities",
+  "getOrganizationDevicesAvailabilitiesChangeHistory",
+  "getOrganizationDevicesBootsHistory",
+  "createOrganizationDevicesControllerMigration",
+  "getOrganizationDevicesControllerMigrations",
+  "bulkUpdateOrganizationDevicesDetails",
+  "getOrganizationDevicesOverviewByModel",
+  "getOrganizationDevicesPacketCaptureCaptures",
+  "createOrganizationDevicesPacketCaptureCapture",
+  "bulkOrganizationDevicesPacketCaptureCapturesCreate",
+  "bulkOrganizationDevicesPacketCaptureCapturesDelete",
+  "deleteOrganizationDevicesPacketCaptureCapture",
+  "generateOrganizationDevicesPacketCaptureCaptureDownloadUrl",
+  "stopOrganizationDevicesPacketCaptureCapture",
+  "getOrganizationDevicesPacketCaptureSchedules",
+  "createOrganizationDevicesPacketCaptureSchedule",
+  "bulkOrganizationDevicesPacketCaptureSchedulesDelete",
+  "reorderOrganizationDevicesPacketCaptureSchedules",
+  "updateOrganizationDevicesPacketCaptureSchedule",
+  "deleteOrganizationDevicesPacketCaptureSchedule",
+  "tasksOrganizationDevicesPacketCapture",
+  "getOrganizationDevicesPacketCaptureTask",
+  "getOrganizationDevicesPowerModulesStatusesByDevice",
+  "getOrganizationDevicesProvisioningStatuses",
+  "getOrganizationDevicesStatuses",
+  "getOrganizationDevicesStatusesOverview",
+  "getOrganizationDevicesSyslogServersRolesByNetwork",
+  "getOrganizationDevicesSystemMemoryUsageHistoryByInterval",
+  "getOrganizationDevicesUplinksAddressesByDevice",
+  "getOrganizationDevicesUplinksLossAndLatency",
+  "getOrganizationEarlyAccessFeatures",
+  "getOrganizationEarlyAccessFeaturesOptIns",
+  "createOrganizationEarlyAccessFeaturesOptIn",
+  "getOrganizationEarlyAccessFeaturesOptIn",
+  "updateOrganizationEarlyAccessFeaturesOptIn",
+  "deleteOrganizationEarlyAccessFeaturesOptIn",
+  "updateOrganizationExtensionsSdwanmanagerInterconnect",
+  "getOrganizationExtensionsThousandEyesNetworks",
+  "createOrganizationExtensionsThousandEyesNetwork",
+  "getOrganizationExtensionsThousandEyesNetworksSupported",
+  "getOrganizationExtensionsThousandEyesNetwork",
+  "updateOrganizationExtensionsThousandEyesNetwork",
+  "deleteOrganizationExtensionsThousandEyesNetwork",
+  "createOrganizationExtensionsThousandEyesTest",
+  "getOrganizationFirmwareUpgrades",
+  "getOrganizationFirmwareUpgradesByDevice",
+  "getOrganizationFloorPlansAutoLocateDevices",
+  "getOrganizationFloorPlansAutoLocateStatuses",
+  "getOrganizationIntegrationsXdrNetworks",
+  "disableOrganizationIntegrationsXdrNetworks",
+  "enableOrganizationIntegrationsXdrNetworks",
+  "claimIntoOrganizationInventory",
+  "getOrganizationInventoryDevices",
+  "createOrganizationInventoryDevicesSwapsBulk",
+  "getOrganizationInventoryDevicesSwapsBulk",
+  "getOrganizationInventoryDevice",
+  "createOrganizationInventoryOnboardingCloudMonitoringExportEvent",
+  "createOrganizationInventoryOnboardingCloudMonitoringImport",
+  "getOrganizationInventoryOnboardingCloudMonitoringImports",
+  "getOrganizationInventoryOnboardingCloudMonitoringNetworks",
+  "createOrganizationInventoryOnboardingCloudMonitoringPrepare",
+  "claimOrganizationInventoryOrders",
+  "previewOrganizationInventoryOrders",
+  "releaseFromOrganizationInventory",
+  "getOrganizationLicenses",
+  "assignOrganizationLicensesSeats",
+  "moveOrganizationLicenses",
+  "moveOrganizationLicensesSeats",
+  "getOrganizationLicensesOverview",
+  "renewOrganizationLicensesSeats",
+  "getOrganizationLicense",
+  "updateOrganizationLicense",
+  "getOrganizationLoginSecurity",
+  "updateOrganizationLoginSecurity",
+  "getOrganizationNetworks",
+  "createOrganizationNetwork",
+  "combineOrganizationNetworks",
+  "createNetworkMove",
+  "getNetworkMoves",
+  "getNetworkMove",
+  "getOrganizationOpenapiSpec",
+  "getOrganizationPoliciesAssignmentsByClient",
+  "getOrganizationPolicyObjects",
+  "createOrganizationPolicyObject",
+  "getOrganizationPolicyObjectsGroups",
+  "createOrganizationPolicyObjectsGroup",
+  "getOrganizationPolicyObjectsGroup",
+  "updateOrganizationPolicyObjectsGroup",
+  "deleteOrganizationPolicyObjectsGroup",
+  "getOrganizationPolicyObject",
+  "updateOrganizationPolicyObject",
+  "deleteOrganizationPolicyObject",
+  "getOrganizationSaml",
+  "updateOrganizationSaml",
+  "getOrganizationSamlIdps",
+  "createOrganizationSamlIdp",
+  "updateOrganizationSamlIdp",
+  "getOrganizationSamlIdp",
+  "deleteOrganizationSamlIdp",
+  "getOrganizationSamlRoles",
+  "createOrganizationSamlRole",
+  "getOrganizationSamlRole",
+  "updateOrganizationSamlRole",
+  "deleteOrganizationSamlRole",
+  "getOrganizationSaseConnectivityEnrollableNetworks",
+  "deleteOrganizationSaseConnectivitySitesBulkDetach",
+  "createOrganizationSaseConnectivitySitesBulkEnroll",
+  "getOrganizationSaseConnectivitySite",
+  "getOrganizationSnmp",
+  "updateOrganizationSnmp",
+  "getOrganizationSnmpTrapsByNetwork",
+  "deleteOrganizationSpacesIntegrationRemove",
+  "createOrganizationSpacesIntegrationRemove",
+  "getOrganizationSplashAsset",
+  "deleteOrganizationSplashAsset",
+  "getOrganizationSplashThemes",
+  "createOrganizationSplashTheme",
+  "deleteOrganizationSplashTheme",
+  "createOrganizationSplashThemeAsset",
+  "getOrganizationSummaryTopAppliancesByUtilization",
+  "getOrganizationSummaryTopApplicationsByUsage",
+  "getOrganizationSummaryTopApplicationsCategoriesByUsage",
+  "getOrganizationSummaryTopClientsByUsage",
+  "getOrganizationSummaryTopClientsManufacturersByUsage",
+  "getOrganizationSummaryTopDevicesByUsage",
+  "getOrganizationSummaryTopDevicesModelsByUsage",
+  "getOrganizationSummaryTopNetworksByStatus",
+  "getOrganizationSummaryTopSsidsByUsage",
+  "getOrganizationSummaryTopSwitchesByEnergyUsage",
+  "getOrganizationSupportSalesRepresentatives",
+  "getOrganizationUplinksStatuses",
+  "getOrganizationWebhooksAlertTypes",
+  "getOrganizationWebhooksCallbacksStatus",
+  "getOrganizationWebhooksHttpServers",
+  "createOrganizationWebhooksHttpServer",
+  "getOrganizationWebhooksHttpServer",
+  "updateOrganizationWebhooksHttpServer",
+  "deleteOrganizationWebhooksHttpServer",
+  "getOrganizationWebhooksLogs",
+  "getOrganizationWebhooksPayloadTemplates",
+  "createOrganizationWebhooksPayloadTemplate",
+  "getOrganizationWebhooksPayloadTemplate",
+  "deleteOrganizationWebhooksPayloadTemplate",
+  "updateOrganizationWebhooksPayloadTemplate",
+  "createOrganizationWebhooksWebhookTest",
+  "getOrganizationWebhooksWebhookTest"
 ];

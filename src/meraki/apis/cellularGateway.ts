@@ -1,52 +1,9 @@
-function hasBodyPrefixedKeys(obj: any) {
-  // Check if obj is null or not an object
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-  // Get all keys of the object
-  const keys = Object.keys(obj);
-  // Check if any key starts with "body-"
-  return keys.some(key => key.startsWith('body-'));
-}
-
-function transformRequestBody(obj: any) {
-  const transformedObject: any = {};
-  // Loop through all keys in the original object
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "body-"
-    if (key.startsWith('body-')) {
-      // Create a new key without the "body-" prefix
-      const newKey = key.substring(5); // Remove first 5 characters ("body-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    } else {
-      // If the key doesn't start with "body-", keep it as is
-      transformedObject[key] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
-function transformQueryParams(obj: any) {
-  const transformedObject: any = {};
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "query-"
-    if (key.startsWith('query-')) {
-      // Create a new key without the "query-" prefix
-      const newKey = key.substring(6); // Remove first 6 characters ("query-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
 export async function _cellularGateway(client: any, params: any): Promise<any> {
   let response = {data: ''};
   switch (params.name) {
     case "getDeviceCellularGatewayLan": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/cellularGateway/lan`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/cellularGateway/lan`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -55,13 +12,11 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceCellularGatewayLan": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/cellularGateway/lan`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/cellularGateway/lan`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/cellularGateway/lan`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -71,8 +26,8 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCellularGatewayPortForwardingRules": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/cellularGateway/portForwardingRules`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/cellularGateway/portForwardingRules`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -81,13 +36,11 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceCellularGatewayPortForwardingRules": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/cellularGateway/portForwardingRules`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/cellularGateway/portForwardingRules`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/cellularGateway/portForwardingRules`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -97,8 +50,8 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkCellularGatewayConnectivityMonitoringDestinations": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/cellularGateway/connectivityMonitoringDestinations`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/cellularGateway/connectivityMonitoringDestinations`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -107,13 +60,11 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkCellularGatewayConnectivityMonitoringDestinations": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/cellularGateway/connectivityMonitoringDestinations`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/cellularGateway/connectivityMonitoringDestinations`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/cellularGateway/connectivityMonitoringDestinations`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -123,8 +74,8 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkCellularGatewayDhcp": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/cellularGateway/dhcp`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/cellularGateway/dhcp`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -133,13 +84,11 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkCellularGatewayDhcp": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/cellularGateway/dhcp`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/cellularGateway/dhcp`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/cellularGateway/dhcp`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -149,8 +98,8 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkCellularGatewaySubnetPool": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/cellularGateway/subnetPool`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/cellularGateway/subnetPool`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -159,13 +108,11 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkCellularGatewaySubnetPool": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/cellularGateway/subnetPool`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/cellularGateway/subnetPool`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/cellularGateway/subnetPool`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -175,8 +122,8 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "getNetworkCellularGatewayUplink": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/networks/${params.arguments["path-networkId"]}/cellularGateway/uplink`, { params: queryParams });
+      let path = `/networks/${params.arguments.path.networkId}/cellularGateway/uplink`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -185,13 +132,11 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "updateNetworkCellularGatewayUplink": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/cellularGateway/uplink`, { params: queryParams, data: transformedBody });
+      let path = `/networks/${params.arguments.path.networkId}/cellularGateway/uplink`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/networks/${params.arguments["path-networkId"]}/cellularGateway/uplink`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -201,8 +146,8 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCellularGatewayEsimsInventory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/inventory`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/cellularGateway/esims/inventory`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -211,13 +156,11 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationCellularGatewayEsimsInventory": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/inventory/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/cellularGateway/esims/inventory/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/inventory/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -227,8 +170,8 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCellularGatewayEsimsServiceProviders": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/serviceProviders`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/cellularGateway/esims/serviceProviders`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -237,8 +180,8 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCellularGatewayEsimsServiceProvidersAccounts": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/serviceProviders/accounts`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/cellularGateway/esims/serviceProviders/accounts`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -247,13 +190,11 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationCellularGatewayEsimsServiceProvidersAccount": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/serviceProviders/accounts`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/cellularGateway/esims/serviceProviders/accounts`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/serviceProviders/accounts`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -263,8 +204,8 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCellularGatewayEsimsServiceProvidersAccountsCommu": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/serviceProviders/accounts/communicationPlans`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/cellularGateway/esims/serviceProviders/accounts/communicationPlans`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -273,8 +214,8 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCellularGatewayEsimsServiceProvidersAccountsRateP": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/serviceProviders/accounts/ratePlans`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/cellularGateway/esims/serviceProviders/accounts/ratePlans`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -283,13 +224,11 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationCellularGatewayEsimsServiceProvidersAccount": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/serviceProviders/accounts/{accountId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/cellularGateway/esims/serviceProviders/accounts/{accountId}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/serviceProviders/accounts/{accountId}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -299,13 +238,11 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationCellularGatewayEsimsServiceProvidersAccount": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/serviceProviders/accounts/{accountId}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/cellularGateway/esims/serviceProviders/accounts/{accountId}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/serviceProviders/accounts/{accountId}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -315,13 +252,11 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationCellularGatewayEsimsSwap": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/swap`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/cellularGateway/esims/swap`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/swap`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -331,13 +266,11 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationCellularGatewayEsimsSwap": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/swap/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/cellularGateway/esims/swap/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/esims/swap/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -347,8 +280,8 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationCellularGatewayUplinkStatuses": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/cellularGateway/uplink/statuses`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/cellularGateway/uplink/statuses`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -362,5 +295,28 @@ export async function _cellularGateway(client: any, params: any): Promise<any> {
 }
 
 export const cellularGatewayEndpoints = [
-  "getDeviceCellularGatewayLan","updateDeviceCellularGatewayLan","getDeviceCellularGatewayPortForwardingRules","updateDeviceCellularGatewayPortForwardingRules","getNetworkCellularGatewayConnectivityMonitoringDestinations","updateNetworkCellularGatewayConnectivityMonitoringDestinations","getNetworkCellularGatewayDhcp","updateNetworkCellularGatewayDhcp","getNetworkCellularGatewaySubnetPool","updateNetworkCellularGatewaySubnetPool","getNetworkCellularGatewayUplink","updateNetworkCellularGatewayUplink","getOrganizationCellularGatewayEsimsInventory","updateOrganizationCellularGatewayEsimsInventory","getOrganizationCellularGatewayEsimsServiceProviders","getOrganizationCellularGatewayEsimsServiceProvidersAccounts","createOrganizationCellularGatewayEsimsServiceProvidersAccount","getOrganizationCellularGatewayEsimsServiceProvidersAccountsCommu","getOrganizationCellularGatewayEsimsServiceProvidersAccountsRateP","updateOrganizationCellularGatewayEsimsServiceProvidersAccount","deleteOrganizationCellularGatewayEsimsServiceProvidersAccount","createOrganizationCellularGatewayEsimsSwap","updateOrganizationCellularGatewayEsimsSwap","getOrganizationCellularGatewayUplinkStatuses"
+  "getDeviceCellularGatewayLan",
+  "updateDeviceCellularGatewayLan",
+  "getDeviceCellularGatewayPortForwardingRules",
+  "updateDeviceCellularGatewayPortForwardingRules",
+  "getNetworkCellularGatewayConnectivityMonitoringDestinations",
+  "updateNetworkCellularGatewayConnectivityMonitoringDestinations",
+  "getNetworkCellularGatewayDhcp",
+  "updateNetworkCellularGatewayDhcp",
+  "getNetworkCellularGatewaySubnetPool",
+  "updateNetworkCellularGatewaySubnetPool",
+  "getNetworkCellularGatewayUplink",
+  "updateNetworkCellularGatewayUplink",
+  "getOrganizationCellularGatewayEsimsInventory",
+  "updateOrganizationCellularGatewayEsimsInventory",
+  "getOrganizationCellularGatewayEsimsServiceProviders",
+  "getOrganizationCellularGatewayEsimsServiceProvidersAccounts",
+  "createOrganizationCellularGatewayEsimsServiceProvidersAccount",
+  "getOrganizationCellularGatewayEsimsServiceProvidersAccountsCommu",
+  "getOrganizationCellularGatewayEsimsServiceProvidersAccountsRateP",
+  "updateOrganizationCellularGatewayEsimsServiceProvidersAccount",
+  "deleteOrganizationCellularGatewayEsimsServiceProvidersAccount",
+  "createOrganizationCellularGatewayEsimsSwap",
+  "updateOrganizationCellularGatewayEsimsSwap",
+  "getOrganizationCellularGatewayUplinkStatuses"
 ];

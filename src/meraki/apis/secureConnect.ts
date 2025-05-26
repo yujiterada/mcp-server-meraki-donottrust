@@ -1,52 +1,9 @@
-function hasBodyPrefixedKeys(obj: any) {
-  // Check if obj is null or not an object
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-  // Get all keys of the object
-  const keys = Object.keys(obj);
-  // Check if any key starts with "body-"
-  return keys.some(key => key.startsWith('body-'));
-}
-
-function transformRequestBody(obj: any) {
-  const transformedObject: any = {};
-  // Loop through all keys in the original object
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "body-"
-    if (key.startsWith('body-')) {
-      // Create a new key without the "body-" prefix
-      const newKey = key.substring(5); // Remove first 5 characters ("body-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    } else {
-      // If the key doesn't start with "body-", keep it as is
-      transformedObject[key] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
-function transformQueryParams(obj: any) {
-  const transformedObject: any = {};
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "query-"
-    if (key.startsWith('query-')) {
-      // Create a new key without the "query-" prefix
-      const newKey = key.substring(6); // Remove first 6 characters ("query-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
 export async function _secureConnect(client: any, params: any): Promise<any> {
   let response = {data: ''};
   switch (params.name) {
     case "getOrganizationSecureConnectPrivateApplicationGroups": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplicationGroups`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateApplicationGroups`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -55,13 +12,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSecureConnectPrivateApplicationGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplicationGroups`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateApplicationGroups`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplicationGroups`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -71,13 +26,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSecureConnectPrivateApplicationGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplicationGroups/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateApplicationGroups/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplicationGroups/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -87,13 +40,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSecureConnectPrivateApplicationGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplicationGroups/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateApplicationGroups/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplicationGroups/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -103,8 +54,8 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSecureConnectPrivateApplicationGroup": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplicationGroups/{id}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateApplicationGroups/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -113,8 +64,8 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSecureConnectPrivateApplications": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplications`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateApplications`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -123,13 +74,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSecureConnectPrivateApplication": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplications`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateApplications`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplications`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -139,13 +88,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSecureConnectPrivateApplication": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplications/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateApplications/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplications/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -155,13 +102,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSecureConnectPrivateApplication": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplications/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateApplications/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplications/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -171,8 +116,8 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSecureConnectPrivateApplication": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateApplications/{id}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateApplications/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -181,8 +126,8 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSecureConnectPrivateResourceGroups": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResourceGroups`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateResourceGroups`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -191,13 +136,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSecureConnectPrivateResourceGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResourceGroups`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateResourceGroups`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResourceGroups`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -207,13 +150,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSecureConnectPrivateResourceGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResourceGroups/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateResourceGroups/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResourceGroups/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -223,13 +164,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSecureConnectPrivateResourceGroup": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResourceGroups/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateResourceGroups/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResourceGroups/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -239,8 +178,8 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSecureConnectPrivateResources": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResources`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateResources`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -249,13 +188,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSecureConnectPrivateResource": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResources`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateResources`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResources`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -265,13 +202,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "updateOrganizationSecureConnectPrivateResource": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResources/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateResources/{id}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResources/{id}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -281,13 +216,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSecureConnectPrivateResource": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResources/{id}`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/privateResources/{id}`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/privateResources/{id}`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -297,8 +230,8 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSecureConnectPublicApplications": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/publicApplications`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/publicApplications`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -307,8 +240,8 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSecureConnectRegions": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/regions`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/regions`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -317,8 +250,8 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSecureConnectRemoteAccessLog": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/remoteAccessLog`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/remoteAccessLog`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -327,8 +260,8 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSecureConnectRemoteAccessLogsExports": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/remoteAccessLogsExports`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/remoteAccessLogsExports`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -337,13 +270,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSecureConnectRemoteAccessLogsExport": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/remoteAccessLogsExports`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/remoteAccessLogsExports`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/remoteAccessLogsExports`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -353,8 +284,8 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSecureConnectRemoteAccessLogsExportsDownload": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/remoteAccessLogsExports/download`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/remoteAccessLogsExports/download`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -363,8 +294,8 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSecureConnectRemoteAccessLogsExport": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/remoteAccessLogsExports/{id}`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/remoteAccessLogsExports/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -373,8 +304,8 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "getOrganizationSecureConnectSites": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/sites`, { params: queryParams });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/sites`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -383,13 +314,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "createOrganizationSecureConnectSite": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/sites`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/sites`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/sites`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -399,13 +328,11 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
       };
     }
     case "deleteOrganizationSecureConnectSites": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/sites`, { params: queryParams, data: transformedBody });
+      let path = `/organizations/${params.arguments.path.organizationId}/secureConnect/sites`;
+      if (params.arguments.body) {
+        response = await client.delete(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.delete(`/organizations/${params.arguments["path-organizationId"]}/secureConnect/sites`, { params: queryParams });
+        response = await client.delete(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -420,5 +347,32 @@ export async function _secureConnect(client: any, params: any): Promise<any> {
 }
 
 export const secureConnectEndpoints = [
-  "getOrganizationSecureConnectPrivateApplicationGroups","createOrganizationSecureConnectPrivateApplicationGroup","updateOrganizationSecureConnectPrivateApplicationGroup","deleteOrganizationSecureConnectPrivateApplicationGroup","getOrganizationSecureConnectPrivateApplicationGroup","getOrganizationSecureConnectPrivateApplications","createOrganizationSecureConnectPrivateApplication","updateOrganizationSecureConnectPrivateApplication","deleteOrganizationSecureConnectPrivateApplication","getOrganizationSecureConnectPrivateApplication","getOrganizationSecureConnectPrivateResourceGroups","createOrganizationSecureConnectPrivateResourceGroup","updateOrganizationSecureConnectPrivateResourceGroup","deleteOrganizationSecureConnectPrivateResourceGroup","getOrganizationSecureConnectPrivateResources","createOrganizationSecureConnectPrivateResource","updateOrganizationSecureConnectPrivateResource","deleteOrganizationSecureConnectPrivateResource","getOrganizationSecureConnectPublicApplications","getOrganizationSecureConnectRegions","getOrganizationSecureConnectRemoteAccessLog","getOrganizationSecureConnectRemoteAccessLogsExports","createOrganizationSecureConnectRemoteAccessLogsExport","getOrganizationSecureConnectRemoteAccessLogsExportsDownload","getOrganizationSecureConnectRemoteAccessLogsExport","getOrganizationSecureConnectSites","createOrganizationSecureConnectSite","deleteOrganizationSecureConnectSites"
+  "getOrganizationSecureConnectPrivateApplicationGroups",
+  "createOrganizationSecureConnectPrivateApplicationGroup",
+  "updateOrganizationSecureConnectPrivateApplicationGroup",
+  "deleteOrganizationSecureConnectPrivateApplicationGroup",
+  "getOrganizationSecureConnectPrivateApplicationGroup",
+  "getOrganizationSecureConnectPrivateApplications",
+  "createOrganizationSecureConnectPrivateApplication",
+  "updateOrganizationSecureConnectPrivateApplication",
+  "deleteOrganizationSecureConnectPrivateApplication",
+  "getOrganizationSecureConnectPrivateApplication",
+  "getOrganizationSecureConnectPrivateResourceGroups",
+  "createOrganizationSecureConnectPrivateResourceGroup",
+  "updateOrganizationSecureConnectPrivateResourceGroup",
+  "deleteOrganizationSecureConnectPrivateResourceGroup",
+  "getOrganizationSecureConnectPrivateResources",
+  "createOrganizationSecureConnectPrivateResource",
+  "updateOrganizationSecureConnectPrivateResource",
+  "deleteOrganizationSecureConnectPrivateResource",
+  "getOrganizationSecureConnectPublicApplications",
+  "getOrganizationSecureConnectRegions",
+  "getOrganizationSecureConnectRemoteAccessLog",
+  "getOrganizationSecureConnectRemoteAccessLogsExports",
+  "createOrganizationSecureConnectRemoteAccessLogsExport",
+  "getOrganizationSecureConnectRemoteAccessLogsExportsDownload",
+  "getOrganizationSecureConnectRemoteAccessLogsExport",
+  "getOrganizationSecureConnectSites",
+  "createOrganizationSecureConnectSite",
+  "deleteOrganizationSecureConnectSites"
 ];

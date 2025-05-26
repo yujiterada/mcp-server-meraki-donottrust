@@ -1,52 +1,9 @@
-function hasBodyPrefixedKeys(obj: any) {
-  // Check if obj is null or not an object
-  if (!obj || typeof obj !== 'object') {
-    return false;
-  }
-  // Get all keys of the object
-  const keys = Object.keys(obj);
-  // Check if any key starts with "body-"
-  return keys.some(key => key.startsWith('body-'));
-}
-
-function transformRequestBody(obj: any) {
-  const transformedObject: any = {};
-  // Loop through all keys in the original object
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "body-"
-    if (key.startsWith('body-')) {
-      // Create a new key without the "body-" prefix
-      const newKey = key.substring(5); // Remove first 5 characters ("body-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    } else {
-      // If the key doesn't start with "body-", keep it as is
-      transformedObject[key] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
-function transformQueryParams(obj: any) {
-  const transformedObject: any = {};
-  Object.keys(obj).forEach(key => {
-    // Check if the key starts with "query-"
-    if (key.startsWith('query-')) {
-      // Create a new key without the "query-" prefix
-      const newKey = key.substring(6); // Remove first 6 characters ("query-")
-      // Copy the value to the new key
-      transformedObject[newKey] = obj[key];
-    }
-  });
-  return transformedObject;
-}
-
 export async function _devices(client: any, params: any): Promise<any> {
   let response = {data: ''};
   switch (params.name) {
     case "getDevice": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -55,13 +12,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "updateDevice": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -71,13 +26,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "blinkDeviceLeds": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/blinkLeds`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/blinkLeds`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/blinkLeds`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -87,8 +40,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceCellularSims": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/cellular/sims`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/cellular/sims`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -97,13 +50,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceCellularSims": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/cellular/sims`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/cellular/sims`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/cellular/sims`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -113,8 +64,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceClients": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/clients`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/clients`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -123,13 +74,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsAclHitCount": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/aclHitCount`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/aclHitCount`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/aclHitCount`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -139,8 +88,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsAclHitCount": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/aclHitCount/{id}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/aclHitCount/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -149,13 +98,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsArpTable": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/arpTable`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/arpTable`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/arpTable`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -165,8 +112,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsArpTable": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/arpTable/{arpTableId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/arpTable/{arpTableId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -175,13 +122,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsCableTest": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/cableTest`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/cableTest`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/cableTest`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -191,8 +136,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsCableTest": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/cableTest/{id}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/cableTest/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -201,13 +146,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsCyclePort": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/cyclePort`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/cyclePort`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/cyclePort`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -217,8 +160,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsCyclePort": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/cyclePort/{id}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/cyclePort/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -227,13 +170,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsDhcpLease": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/dhcpLeases`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/dhcpLeases`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/dhcpLeases`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -243,8 +184,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsDhcpLease": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/dhcpLeases/{dhcpLeasesId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/dhcpLeases/{dhcpLeasesId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -253,13 +194,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsLedsBlink": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/leds/blink`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/leds/blink`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/leds/blink`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -269,8 +208,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsLedsBlink": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/leds/blink/{ledsBlinkId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/leds/blink/{ledsBlinkId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -279,13 +218,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsMacTable": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/macTable`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/macTable`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/macTable`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -295,8 +232,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsMacTable": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/macTable/{macTableId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/macTable/{macTableId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -305,13 +242,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsMulticastRouting": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/multicastRouting`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/multicastRouting`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/multicastRouting`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -321,8 +256,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsMulticastRouting": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/multicastRouting/{multicastRoutingId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/multicastRouting/{multicastRoutingId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -331,13 +266,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsOspfNeighbor": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/ospfNeighbors`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/ospfNeighbors`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/ospfNeighbors`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -347,8 +280,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsOspfNeighbor": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/ospfNeighbors/{ospfNeighborsId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/ospfNeighbors/{ospfNeighborsId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -357,13 +290,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsPing": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/ping`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/ping`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/ping`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -373,8 +304,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsPing": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/ping/{id}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/ping/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -383,13 +314,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsPingDevice": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/pingDevice`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/pingDevice`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/pingDevice`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -399,8 +328,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsPingDevice": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/pingDevice/{id}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/pingDevice/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -409,13 +338,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsRoutingTable": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/routingTable`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/routingTable`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/routingTable`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -425,8 +352,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsRoutingTable": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/routingTable/{id}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/routingTable/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -435,13 +362,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsSpeedTest": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/speedTest`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/speedTest`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/speedTest`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -451,8 +376,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsSpeedTest": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/speedTest/{id}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/speedTest/{id}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -461,13 +386,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsThroughputTest": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/throughputTest`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/throughputTest`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/throughputTest`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -477,8 +400,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsThroughputTest": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/throughputTest/{throughputTestId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/throughputTest/{throughputTestId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -487,13 +410,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsTraceRoute": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/traceRoute`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/traceRoute`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/traceRoute`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -503,8 +424,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsTraceRoute": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/traceRoute/{traceRouteId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/traceRoute/{traceRouteId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -513,13 +434,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "createDeviceLiveToolsWakeOnLan": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/wakeOnLan`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/wakeOnLan`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/liveTools/wakeOnLan`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -529,8 +448,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLiveToolsWakeOnLan": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/liveTools/wakeOnLan/{wakeOnLanId}`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/liveTools/wakeOnLan/{wakeOnLanId}`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -539,8 +458,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLldpCdp": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/lldpCdp`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/lldpCdp`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -549,8 +468,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceLossAndLatencyHistory": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/lossAndLatencyHistory`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/lossAndLatencyHistory`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -559,8 +478,8 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "getDeviceManagementInterface": {
-      const queryParams = transformQueryParams(params.arguments);
-      response = await client.get(`/devices/${params.arguments["path-serial"]}/managementInterface`, { params: queryParams });
+      let path = `/devices/${params.arguments.path.serial}/managementInterface`;
+      response = await client.get(path, { params: params.arguments.query });
       const data = response.data;
       return {
         ok: true,
@@ -569,13 +488,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "updateDeviceManagementInterface": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/managementInterface`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/managementInterface`;
+      if (params.arguments.body) {
+        response = await client.put(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.put(`/devices/${params.arguments["path-serial"]}/managementInterface`, { params: queryParams });
+        response = await client.put(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -585,13 +502,11 @@ export async function _devices(client: any, params: any): Promise<any> {
       };
     }
     case "rebootDevice": {
-      const hasBody = hasBodyPrefixedKeys(params.arguments);
-      const queryParams = transformQueryParams(params.arguments);
-      if (hasBody) {
-        const transformedBody = transformRequestBody(params.arguments);
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/reboot`, { params: queryParams, data: transformedBody });
+      let path = `/devices/${params.arguments.path.serial}/reboot`;
+      if (params.arguments.body) {
+        response = await client.post(path, params.arguments.body, { params: params.arguments.query });
       } else {
-        response = await client.post(`/devices/${params.arguments["path-serial"]}/reboot`, { params: queryParams });
+        response = await client.post(path, { params: params.arguments.query });
       }
       const data = response.data;
       return {
@@ -606,5 +521,47 @@ export async function _devices(client: any, params: any): Promise<any> {
 }
 
 export const devicesEndpoints = [
-  "getDevice","updateDevice","blinkDeviceLeds","getDeviceCellularSims","updateDeviceCellularSims","getDeviceClients","createDeviceLiveToolsAclHitCount","getDeviceLiveToolsAclHitCount","createDeviceLiveToolsArpTable","getDeviceLiveToolsArpTable","createDeviceLiveToolsCableTest","getDeviceLiveToolsCableTest","createDeviceLiveToolsCyclePort","getDeviceLiveToolsCyclePort","createDeviceLiveToolsDhcpLease","getDeviceLiveToolsDhcpLease","createDeviceLiveToolsLedsBlink","getDeviceLiveToolsLedsBlink","createDeviceLiveToolsMacTable","getDeviceLiveToolsMacTable","createDeviceLiveToolsMulticastRouting","getDeviceLiveToolsMulticastRouting","createDeviceLiveToolsOspfNeighbor","getDeviceLiveToolsOspfNeighbor","createDeviceLiveToolsPing","getDeviceLiveToolsPing","createDeviceLiveToolsPingDevice","getDeviceLiveToolsPingDevice","createDeviceLiveToolsRoutingTable","getDeviceLiveToolsRoutingTable","createDeviceLiveToolsSpeedTest","getDeviceLiveToolsSpeedTest","createDeviceLiveToolsThroughputTest","getDeviceLiveToolsThroughputTest","createDeviceLiveToolsTraceRoute","getDeviceLiveToolsTraceRoute","createDeviceLiveToolsWakeOnLan","getDeviceLiveToolsWakeOnLan","getDeviceLldpCdp","getDeviceLossAndLatencyHistory","getDeviceManagementInterface","updateDeviceManagementInterface","rebootDevice"
+  "getDevice",
+  "updateDevice",
+  "blinkDeviceLeds",
+  "getDeviceCellularSims",
+  "updateDeviceCellularSims",
+  "getDeviceClients",
+  "createDeviceLiveToolsAclHitCount",
+  "getDeviceLiveToolsAclHitCount",
+  "createDeviceLiveToolsArpTable",
+  "getDeviceLiveToolsArpTable",
+  "createDeviceLiveToolsCableTest",
+  "getDeviceLiveToolsCableTest",
+  "createDeviceLiveToolsCyclePort",
+  "getDeviceLiveToolsCyclePort",
+  "createDeviceLiveToolsDhcpLease",
+  "getDeviceLiveToolsDhcpLease",
+  "createDeviceLiveToolsLedsBlink",
+  "getDeviceLiveToolsLedsBlink",
+  "createDeviceLiveToolsMacTable",
+  "getDeviceLiveToolsMacTable",
+  "createDeviceLiveToolsMulticastRouting",
+  "getDeviceLiveToolsMulticastRouting",
+  "createDeviceLiveToolsOspfNeighbor",
+  "getDeviceLiveToolsOspfNeighbor",
+  "createDeviceLiveToolsPing",
+  "getDeviceLiveToolsPing",
+  "createDeviceLiveToolsPingDevice",
+  "getDeviceLiveToolsPingDevice",
+  "createDeviceLiveToolsRoutingTable",
+  "getDeviceLiveToolsRoutingTable",
+  "createDeviceLiveToolsSpeedTest",
+  "getDeviceLiveToolsSpeedTest",
+  "createDeviceLiveToolsThroughputTest",
+  "getDeviceLiveToolsThroughputTest",
+  "createDeviceLiveToolsTraceRoute",
+  "getDeviceLiveToolsTraceRoute",
+  "createDeviceLiveToolsWakeOnLan",
+  "getDeviceLiveToolsWakeOnLan",
+  "getDeviceLldpCdp",
+  "getDeviceLossAndLatencyHistory",
+  "getDeviceManagementInterface",
+  "updateDeviceManagementInterface",
+  "rebootDevice"
 ];
