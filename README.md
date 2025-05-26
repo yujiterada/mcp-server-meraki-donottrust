@@ -51,7 +51,7 @@ cp .env.sample .env
       - `WIRELESS_API_ENABLED`
       - `WIRELESS_CONTROLLER_API_ENABLED`
 
-   Note: It's recommended to enable only the API endpoint scopes you need, as enabling all scopes might exceed Claude's context limits.
+   Note: It's recommended to enable only the API endpoint scopes you need, as enabling all scopes might exceed Claude's context limits. Chat length is vrey limited on free version of Claude and therefore, the user will need to enable/disable spefici API endpoints from Claude app.
 
 5. Build the project:
 ```bash
@@ -66,17 +66,33 @@ npm run build
 4. Click "Developer" on the left hand side
 5. Click "Edit Config"
 6. Create/Edit a file entering the following details:
+
+   macOS
    ```
    {
-   "mcpServers": {
-      "meraki": {
-         "command": "node",
-         "args": [
-            "--env-file=/path/to/mcp-server-meraki/.env",
-            "/path/to/mcp-server-meraki/build/index.js"
-            ]
-         }
-      }
+       "mcpServers": {
+           "meraki": {
+               "command": "node",
+               "args": [
+                   "--env-file=/path/to/mcp-server-meraki/.env",
+                   "/path/to/mcp-server-meraki/build/index.js"
+               ]
+           }
+       }
+   }
+   ```
+   Windows
+   ```
+   {
+       "mcpServers": {
+           "meraki": {
+               "command": "C:\\path\\to\\node.exe",
+               "args": [
+                   "--env-file=C:\\path\\to\\mcp-server-meraki-donottrust\\.env",
+                   "C:\\path\\to\\mcp-server-meraki-donottrust\\build\\index.js"
+               ]
+           }
+       }
    }
    ```
 7. Restart app
